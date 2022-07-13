@@ -1,0 +1,187 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+  <title>Kirito避难所</title>
+  
+  
+  <link href="http://kirito.top/atom.xml" rel="self"/>
+  
+  <link href="http://kirito.top/"/>
+  <updated>2022-05-21T04:24:50.324Z</updated>
+  <id>http://kirito.top/</id>
+  
+  <author>
+    <name>SAO_Knight</name>
+    
+  </author>
+  
+  <generator uri="https://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>ADC</title>
+    <link href="http://kirito.top/2022/05/21/ADC/"/>
+    <id>http://kirito.top/2022/05/21/ADC/</id>
+    <published>2022-05-21T04:24:50.000Z</published>
+    <updated>2022-05-21T04:24:50.324Z</updated>
+    
+    
+    
+    
+    
+  </entry>
+  
+  <entry>
+    <title>Keil C51的安装</title>
+    <link href="http://kirito.top/2022/05/21/keilc51/"/>
+    <id>http://kirito.top/2022/05/21/keilc51/</id>
+    <published>2022-05-21T01:13:07.000Z</published>
+    <updated>2022-07-13T07:19:25.044Z</updated>
+    
+    
+      
+      
+        
+        
+    <summary type="html">&lt;h2 id=&quot;1-Keil-C51的下载&quot;&gt;&lt;a href=&quot;#1-Keil-C51的下载&quot; class=&quot;headerlink&quot; title=&quot;1. Keil C51的下载&quot;&gt;&lt;/a&gt;1. Keil C51的下载&lt;/h2&gt;&lt;h3 id=&quot;1-1-进入Keil-官网&quot;&gt;&lt;a</summary>
+        
+      
+    
+    
+    
+    
+  </entry>
+  
+  <entry>
+    <title>PWM信号的产生与电机的驱动</title>
+    <link href="http://kirito.top/2022/05/19/pwmdj/"/>
+    <id>http://kirito.top/2022/05/19/pwmdj/</id>
+    <published>2022-05-19T15:59:09.000Z</published>
+    <updated>2022-07-13T07:16:01.909Z</updated>
+    
+    
+      
+      
+        
+        
+    <summary type="html">&lt;h2 id=&quot;PWM的原理&quot;&gt;&lt;a href=&quot;#PWM的原理&quot; class=&quot;headerlink&quot; title=&quot;PWM的原理&quot;&gt;&lt;/a&gt;PWM的原理&lt;/h2&gt;&lt;h3 id=&quot;1-1-PWM是什么？&quot;&gt;&lt;a href=&quot;#1-1-PWM是什么？&quot;</summary>
+        
+      
+    
+    
+    
+    <category term="SAO_Knight" scheme="http://kirito.top/categories/SAO-Knight/"/>
+    
+    
+    <category term="51单片机" scheme="http://kirito.top/tags/51%E5%8D%95%E7%89%87%E6%9C%BA/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>基于51单片机数码管的时钟显示</title>
+    <link href="http://kirito.top/2022/04/06/shizhong/"/>
+    <id>http://kirito.top/2022/04/06/shizhong/</id>
+    <published>2022-04-06T13:20:51.000Z</published>
+    <updated>2022-07-04T11:32:27.726Z</updated>
+    
+    
+      
+      
+        
+        
+    <summary type="html">&lt;h2 id=&quot;基于51单片机定时的数码管显示时间&quot;&gt;&lt;a href=&quot;#基于51单片机定时的数码管显示时间&quot; class=&quot;headerlink&quot; title=&quot;基于51单片机定时的数码管显示时间&quot;&gt;&lt;/a&gt;基于51单片机定时的数码管显示时间&lt;/h2&gt;&lt;h3</summary>
+        
+      
+    
+    
+    
+    <category term="SAO_Knight" scheme="http://kirito.top/categories/SAO-Knight/"/>
+    
+    
+    <category term="51单片机" scheme="http://kirito.top/tags/51%E5%8D%95%E7%89%87%E6%9C%BA/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>关于使用Hexo搭建个人博客的简易教程</title>
+    <link href="http://kirito.top/2021/12/25/git-1/"/>
+    <id>http://kirito.top/2021/12/25/git-1/</id>
+    <published>2021-12-25T09:40:36.000Z</published>
+    <updated>2022-04-07T11:54:24.788Z</updated>
+    
+    
+      
+      
+        
+        
+    <summary type="html">&lt;h1 id=&quot;博客搭建&quot;&gt;&lt;a href=&quot;#博客搭建&quot; class=&quot;headerlink&quot; title=&quot;博客搭建&quot;&gt;&lt;/a&gt;博客搭建&lt;/h1&gt;&lt;h2 id=&quot;前言&quot;&gt;&lt;a href=&quot;#前言&quot; class=&quot;headerlink&quot;</summary>
+        
+      
+    
+    
+    
+    <category term="SAO_Knight" scheme="http://kirito.top/categories/SAO-Knight/"/>
+    
+    
+    <category term="Hexo" scheme="http://kirito.top/tags/Hexo/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>诚信主题班会</title>
+    <link href="http://kirito.top/2021/12/24/class-meeting/"/>
+    <id>http://kirito.top/2021/12/24/class-meeting/</id>
+    <published>2021-12-24T11:45:59.000Z</published>
+    <updated>2022-07-13T07:13:43.933Z</updated>
+    
+    
+      
+      
+        
+        
+    <summary type="html">&lt;p&gt;&lt;tittle&gt;&lt;font size=&#39;6&#39;&gt;机器人工程212诚信班会&lt;/font&gt;&lt;/tittle&gt;&lt;/p&gt;
+&lt;blockquote&gt;&lt;b&gt;人无信不立，家无信不和，业无信不兴，国无信不盛。
+&lt;/b&gt;&lt;/blockquote&gt;
+
+&lt;h1 id=&quot;何为诚信？&quot;&gt;&lt;a</summary>
+        
+      
+    
+    
+    
+    <category term="SAO_Knight" scheme="http://kirito.top/categories/SAO-Knight/"/>
+    
+    
+    <category term="学校" scheme="http://kirito.top/tags/%E5%AD%A6%E6%A0%A1/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>关于重装Windows10</title>
+    <link href="http://kirito.top/2021/12/21/windows/"/>
+    <id>http://kirito.top/2021/12/21/windows/</id>
+    <published>2021-12-21T02:24:11.000Z</published>
+    <updated>2021-12-22T16:07:22.000Z</updated>
+    
+    
+      
+      
+        
+        
+    <summary type="html">&lt;blockquote&gt;
+&lt;p&gt;这篇文章来自于&lt;b&gt;Red_lnn&lt;/b&gt;的&lt;a</summary>
+        
+      
+    
+    
+    
+    <category term="Red_lnn" scheme="http://kirito.top/categories/Red-lnn/"/>
+    
+    
+    <category term="Windows" scheme="http://kirito.top/tags/Windows/"/>
+    
+    <category term="教程" scheme="http://kirito.top/tags/%E6%95%99%E7%A8%8B/"/>
+    
+    <category term="Red_lnn" scheme="http://kirito.top/tags/Red-lnn/"/>
+    
+  </entry>
+  
+</feed>
