@@ -1,0 +1,1222 @@
+
+
+<!DOCTYPE html>
+<html lang="zh-CN" data-default-color-scheme=auto>
+
+
+
+<head>
+  <meta charset="UTF-8">
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/touxiang.jpg">
+  <link rel="icon" href="/img/touxiang.jpg">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="author" content="SAO_Knight">
+  <meta name="keywords" content="">
+  
+    <meta name="description" content="PWM的原理1.1 PWM是什么？PWM表示脉冲宽度调制，现在我们先将PWM理解为一种信号，它可以从微控制器或555定时器等数字集成电路中产生，它是一系列脉冲，这些脉冲将以方波的形式出现。也就是说，在任何给定的时间点，波型要么是高电平或者是低电平。为了便于理解，让我们假设有一个5V的PWM信号，高电平时PWM信号电压是5V，低电平时PWM信号是0V。信号保持在高电平的持续时间称为“接通时间”，信号">
+<meta property="og:type" content="article">
+<meta property="og:title" content="PWM信号的产生与电机的驱动">
+<meta property="og:url" content="http://kirito.top/2022/05/19/pwmdj/index.html">
+<meta property="og:site_name" content="Kirito避难所">
+<meta property="og:description" content="PWM的原理1.1 PWM是什么？PWM表示脉冲宽度调制，现在我们先将PWM理解为一种信号，它可以从微控制器或555定时器等数字集成电路中产生，它是一系列脉冲，这些脉冲将以方波的形式出现。也就是说，在任何给定的时间点，波型要么是高电平或者是低电平。为了便于理解，让我们假设有一个5V的PWM信号，高电平时PWM信号电压是5V，低电平时PWM信号是0V。信号保持在高电平的持续时间称为“接通时间”，信号">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="http://kirito.top/images/L9110S.png">
+<meta property="article:published_time" content="2022-05-19T15:59:09.000Z">
+<meta property="article:modified_time" content="2022-07-13T07:16:01.909Z">
+<meta property="article:author" content="SAO_Knight">
+<meta property="article:tag" content="51单片机">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="http://kirito.top/images/L9110S.png">
+  
+  
+    <meta name="referrer" content="no-referrer-when-downgrade">
+  
+  
+  <title>PWM信号的产生与电机的驱动 - Kirito避难所</title>
+
+  <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4/dist/css/bootstrap.min.css" />
+
+
+
+  <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/github-markdown-css@4/github-markdown.min.css" />
+
+  <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/hint.css@2/hint.min.css" />
+
+  <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3/dist/jquery.fancybox.min.css" />
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+<!-- Do not modify the link that theme dependent icons -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_hj8rtnfg7um.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_lbnruvf0jn.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+
+  <link id="highlight-css" rel="stylesheet" href="/css/highlight.css" />
+  
+    <link id="highlight-css-dark" rel="stylesheet" href="/css/highlight-dark.css" />
+  
+
+
+
+  
+<link rel="stylesheet" href="//cdn.jsdelivr.net/npm/aplayer/dist/APlayer.min.css">
+<link rel="stylesheet" href="/css/extension.css">
+
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    Fluid.ctx = Object.assign({}, Fluid.ctx)
+    var CONFIG = {"hostname":"kirito.top","root":"/","version":"1.9.2","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false,"scope":[]},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"right","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"code_language":{"enable":true,"default":"TEXT"},"copy_btn":true,"image_caption":{"enable":true},"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"placement":"right","headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":false,"follow_dnt":true,"baidu":null,"google":null,"gtag":null,"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname","ignore_local":false}},"search_path":"/local-search.xml"};
+
+    if (CONFIG.web_analytics.follow_dnt) {
+      var dntVal = navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack;
+      Fluid.ctx.dnt = dntVal && (dntVal.startsWith('1') || dntVal.startsWith('yes') || dntVal.startsWith('on'));
+    }
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+  
+
+
+  
+<meta name="generator" content="Hexo 5.4.2"></head>
+
+
+<body>
+  
+  
+  <header>
+    
+
+<div class="header-inner" style="height: 70vh;">
+  <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand" href="/">
+      <strong>Kirito</strong>
+    </a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/">
+                <i class="iconfont icon-home-fill"></i>
+                首页
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/">
+                <i class="iconfont icon-archive-fill"></i>
+                归档
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/">
+                <i class="iconfont icon-category-fill"></i>
+                分类
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/">
+                <i class="iconfont icon-tags-fill"></i>
+                标签
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/">
+                <i class="iconfont icon-user-fill"></i>
+                关于
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              &nbsp;<i class="iconfont icon-search"></i>&nbsp;
+            </a>
+          </li>
+          
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">&nbsp;<i
+                class="iconfont icon-dark" id="color-toggle-icon"></i>&nbsp;</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+  
+
+<div id="banner" class="banner" parallax=true
+     style="background: url('/img/AboutHead.jpg') no-repeat center center; background-size: cover;">
+  <div class="full-bg-img">
+    <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+      <div class="banner-text text-center fade-in-up">
+        <div class="h2">
+          
+            <span id="subtitle" data-typed-text="PWM信号的产生与电机的驱动"></span>
+          
+        </div>
+
+        
+          
+  <div class="mt-3">
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-author" aria-hidden="true"></i>
+        SAO_Knight
+      </span>
+    
+    
+      <span class="post-meta">
+        <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+        <time datetime="2022-05-19 23:59" pubdate>
+          2022年5月19日 晚上
+        </time>
+      </span>
+    
+  </div>
+
+  <div class="mt-1">
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-chart"></i>
+        
+          <!-- compatible with older versions-->
+          8k 字
+        
+      </span>
+    
+
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-clock-fill"></i>
+        
+        
+        
+          <!-- compatible with older versions-->
+          67 分钟
+        
+      </span>
+    
+
+    
+    
+  </div>
+
+
+        
+      </div>
+
+      
+    </div>
+  </div>
+</div>
+
+</div>
+
+    <script src="https://cdn.bootcss.com/jquery/3.4.1/jquery.min.js"></script>
+    <script src="https://cdn.bootcss.com/jquery.pjax/2.0.1/jquery.pjax.min.js"></script>
+  </header>
+
+  <main>
+    
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+
+    </div>
+
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div id="board">
+          <article class="post-content mx-auto">
+            <!-- SEO header -->
+            <h1 style="display: none">PWM信号的产生与电机的驱动</h1>
+            
+            
+              <div class="markdown-body">
+                
+                <h2 id="PWM的原理"><a href="#PWM的原理" class="headerlink" title="PWM的原理"></a>PWM的原理</h2><h3 id="1-1-PWM是什么？"><a href="#1-1-PWM是什么？" class="headerlink" title="1.1 PWM是什么？"></a>1.1 PWM是什么？</h3><p><strong>PWM</strong>表示脉冲宽度调制，现在我们先将<strong>PWM</strong>理解为一种信号，它可以从微控制器或555定时器等数字集成电路中产生，它是一系列脉冲，这些脉冲将以方波的形式出现。也就是说，在任何给定的时间点，波型要么是高电平或者是低电平。为了便于理解，让我们假设有一个<strong>5V</strong>的<strong>PWM</strong>信号，高电平时<strong>PWM</strong>信号电压是<strong>5V</strong>，低电平时<strong>PWM信号</strong>是<strong>0V</strong>。信号保持在高电平的持续时间称为“接通时间”，信号保持在低电平的持续时间称为“断开时间”。对于<strong>PWM</strong>信号我们需要关注两个与之相关的重要参数，一个是<strong>PWM</strong>占空比，另一个是<strong>PWM</strong>信号的频率。</p>
+<h3 id="1-2-PWM的占空比"><a href="#1-2-PWM的占空比" class="headerlink" title="1.2 PWM的占空比"></a>1.2 PWM的占空比</h3><p>如前面所述，<strong>PWM</strong>信号在特定的时间内保持接通状态，然后在剩余的时间内保持断开状态。占空比是指在一个脉冲循环内，接通时间相对于总时间所占的比例。在一段连续工作时间内脉冲高电平时间与总时间的比值。如果信号总是处于高电平，它的占空比是百分之百；如果信号总是处于低电平，那么它的占空比是百分之零。计算占空比的公式如下所示：</p>
+<p><strong>占空比 =接通时间 / (接通时间 + 断开时间)</strong></p>
+<h3 id="1-3-PWM的频率"><a href="#1-3-PWM的频率" class="headerlink" title="1.3 PWM的频率"></a>1.3 PWM的频率</h3><p><strong>PWM</strong>信号的频率决定了<strong>PWM</strong>完成一个信号周期的速度。周期是指<strong>PWM</strong>信号完成一个接通和关闭的时间。计算频率的公式如下所示</p>
+<p><strong>频率 = 1 / 总持续时间</strong><br><strong>总持续时间 = 接通时间 + 断开时间</strong></p>
+<h2 id="PWM的产生"><a href="#PWM的产生" class="headerlink" title="PWM的产生"></a>PWM的产生</h2><p>产生的途径主要有4个，这个主要是针对增强版的单片机而言。</p>
+<h3 id="2-1-延时"><a href="#2-1-延时" class="headerlink" title="2.1 延时"></a>2.1 延时</h3><p>思路：比如在<strong>P10</strong>口产生<strong>PWM</strong>波形，可以这么实现：<br>大概代码。</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs c">P10=<span class="hljs-number">1</span>;<br>delay(时间<span class="hljs-number">1</span>);<br>P10=<span class="hljs-number">0</span>;<br>delay(时间<span class="hljs-number">2</span>);<br></code></pre></td></tr></table></figure>
+<p>这样，时间1+时间2=周期；<br>频率等于周期的倒数。<br>占空比=时间1/周期；<br>这个比较占用内部资源，不建议这么做。</p>
+<h3 id="2-2-定时器产生PWM。"><a href="#2-2-定时器产生PWM。" class="headerlink" title="2.2 定时器产生PWM。"></a>2.2 定时器产生PWM。</h3><p>这个普通的<strong>51单片机</strong>经常这么用。<br>网上有比较多资料说到这一点内容。具体不说，自己查资料。<br>缺点是，占用一个定时器资源。可以使用。</p>
+<h3 id="2-3-内部PWM模块产生。"><a href="#2-3-内部PWM模块产生。" class="headerlink" title="2.3 内部PWM模块产生。"></a>2.3 内部PWM模块产生。</h3><p>是这篇博客所使用的方法</p>
+<h3 id="2-4-PCA模块产生PWM。"><a href="#2-4-PCA模块产生PWM。" class="headerlink" title="2.4 PCA模块产生PWM。"></a>2.4 PCA模块产生PWM。</h3><p>可以自己去网上找资料了解</p>
+<h2 id="STC8A8K的PWM原理和相关寄存器"><a href="#STC8A8K的PWM原理和相关寄存器" class="headerlink" title="STC8A8K的PWM原理和相关寄存器"></a>STC8A8K的PWM原理和相关寄存器</h2><p>先看说明书的例子</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><code class="hljs c"><span class="hljs-type">void</span> <span class="hljs-title function_">main</span><span class="hljs-params">()</span><br>&#123;<br>    P_SW2 = <span class="hljs-number">0x80</span>;    <span class="hljs-comment">//打开设置开关</span><br>    PWMCKS = <span class="hljs-number">0x00</span>;   <span class="hljs-comment">//1.PWM时钟为系统时钟</span><br>    PWMC = <span class="hljs-number">0x1000</span>;   <span class="hljs-comment">//2.设置PWM周期为1000H个PWM时钟</span><br>    PWM0T1= <span class="hljs-number">0x0100</span>;  <span class="hljs-comment">//3.在计数值为100H地方输出低电平</span><br>    PWM0T2= <span class="hljs-number">0x0500</span>;  <span class="hljs-comment">//4.在计数值为500H地方输出高电平</span><br>    PWM0CR= <span class="hljs-number">0x80</span>;    <span class="hljs-comment">//5.使能PWM0输出</span><br>    P_SW2 = <span class="hljs-number">0x00</span>;    <span class="hljs-comment">//关闭设置开关</span><br><br>    PWMCR = <span class="hljs-number">0x80</span>;    <span class="hljs-comment">//6.启动PWM模块</span><br><br>    <span class="hljs-keyword">while</span> (<span class="hljs-number">1</span>);<br>&#125;<br></code></pre></td></tr></table></figure>
+<p>有6个步骤。我们把这个步骤每个细节的寄存器了解清楚，就可以设置了。</p>
+<ul>
+<li>设置<strong>PWM</strong>时钟源。</li>
+<li>设置<strong>PWM</strong>周期。</li>
+<li>设置<strong>PWM</strong>的翻转点<strong>T1</strong>。</li>
+<li>设置<strong>PWM</strong>的翻转点<strong>T2</strong>。</li>
+<li>设置<strong>PWM</strong>的具体口允许输出<strong>PWM</strong>。</li>
+<li>设置<strong>PWM</strong>的大门允许输出。</li>
+</ul>
+<h3 id="3-1-设置PWM时钟源"><a href="#3-1-设置PWM时钟源" class="headerlink" title="3.1 设置PWM时钟源"></a>3.1 设置PWM时钟源</h3><p>这个类比于心跳频率，这个决定之后，按照定时计数器，计算跳动的次数，就得到时间，就可以有周期等概念。<br>单片机内部的<strong>PWM</strong>模块，其实是利用计数器的功能。</p>
+<table align="center">
+    <tr>
+        <td align="center">符号</td>
+        <td align="center">地址</td>
+        <td align="center">B7</td>
+        <td align="center">B6</td>
+        <td align="center">B5</td>
+        <td align="center">B4</td>
+        <td align="center">B3</td>
+        <td align="center">B2</td>
+        <td align="center">B1</td>
+        <td align="center">B0</td>
+    </tr>
+    <tr>
+        <td align="center">PWMCKS</td>
+        <td align="center">FFF2H</td>
+        <td align="center">-</td>
+        <td align="center">-</td>
+        <td align="center">-</td>
+        <td align="center">SELT2</td>
+        <td colspan="4" align="center">PWM_PS[3:0]</td>   
+    </tr>
+</table>
+
+<blockquote>
+<p><strong>SELT2</strong>: <strong>PWM</strong>时钟源选择</p>
+<blockquote>
+<p>0: <strong>PWM</strong>时钟源为系统时钟经分频器分频之后的时钟<br>1: <strong>PWM</strong>时钟源为定时器2的溢出脉冲</p>
+</blockquote>
+<p><strong>PWM_ PS[3:0]</strong>: 系统时钟预分频参数</p>
+</blockquote>
+<table>
+<thead>
+<tr>
+<th align="center">SELT2</th>
+<th align="center">PWM_PS[3:0]</th>
+<th align="center">PWM输入时钟源频率</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="center">1</td>
+<td align="center">xxxx</td>
+<td align="center">定时器2的溢出脉冲</td>
+</tr>
+<tr>
+<td align="center">0</td>
+<td align="center">0000</td>
+<td align="center">SYSclk/1</td>
+</tr>
+<tr>
+<td align="center">0</td>
+<td align="center">0001</td>
+<td align="center">SYSclk/2</td>
+</tr>
+<tr>
+<td align="center">0</td>
+<td align="center">0010</td>
+<td align="center">SYSclk/3</td>
+</tr>
+<tr>
+<td align="center">…</td>
+<td align="center">…</td>
+<td align="center">…</td>
+</tr>
+<tr>
+<td align="center">0</td>
+<td align="center">x</td>
+<td align="center">SYSclk/(x+1)</td>
+</tr>
+<tr>
+<td align="center">.</td>
+<td align="center">…</td>
+<td align="center">…</td>
+</tr>
+<tr>
+<td align="center">0</td>
+<td align="center">1111</td>
+<td align="center">SYSclk/16</td>
+</tr>
+</tbody></table>
+<p>上面的表格，是设定<strong>PWM</strong>的时钟源。就是计数的心跳，可以根据自己的需求进行设置。</p>
+<p><strong>本实验用的是：</strong><br>1、分频后的时钟，所以<strong>SELT2=0</strong>，<br>2、分频的系数是<strong>12</strong>，所以<strong>PWM-PS=1011</strong>，<br>所以<br><strong>PWMCKS=00001011=0x0B</strong>；<br>这个语句的作用是，设定PWM时钟源是晶振频率的12分之一。<br>就是<strong>FPWM=11.0592Mhz/12=11059200/12.</strong><br>(因为下载的时候，选择了<strong>11.0592Mhz</strong>频率)</p>
+<h3 id="3-2-设置PWM周期"><a href="#3-2-设置PWM周期" class="headerlink" title="3.2 设置PWM周期"></a>3.2 设置PWM周期</h3><p>当设定了<strong>PWM</strong>时钟频率<strong>FPWM</strong>，计数假设为<strong>N</strong>，<br><code>N 的范围是(1-32767，因为是15位计数器，最大设定数值是32767)</code><br>假设时钟周期为时钟频率的倒数，设为<strong>TPWM</strong>,<br>那么<strong>TPWM=1/FPWM</strong>,<br><strong>PWM</strong>的周期<strong>TSETPWM=N1/FPWM=NTPWM</strong>,<br><strong>PMW</strong>的频率是<strong>PWM</strong>周期的倒数，则是<br><strong>FSETPWM=1/TSETPWM=FPWM/N=11059200/12/N=921600/N</strong>（公式1）<br>根据公式1<br>假如外部设定了<strong>FSETPWM</strong>，那么反推出<strong>N</strong>，<br>得到<strong>N=921600/FSETPWM</strong>。</p>
+<p>所以设定的周期<br><strong>PWMC=921600/FSETPWM</strong><br>表格中是将<strong>PWMC</strong>分为了高八位<strong>PWMCH</strong>和低八位<strong>PWMCL</strong>，我们直接写进去<strong>PWMC</strong>就可以了。</p>
+<table>
+    <tr>
+        <td align="center">符号</td>
+        <td align="center">地址</td>
+        <td align="center">B7</td>
+        <td align="center">B6</td>
+        <td align="center">B5</td>
+        <td align="center">B4</td>
+        <td align="center">B3</td>
+        <td align="center">B2</td>
+        <td align="center">B1</td>
+        <td align="center">B0</td>
+    </tr>
+    <tr>
+        <td align="center">PWMCH</td>
+        <td align="center">FFF0H</td>
+        <td align="center">-</td>
+        <td colspan="7" align="center"></td>
+    </tr>
+    <tr>
+        <td align="center">PWMCL</td>
+        <td align="center">FFF1H</td>
+        <td colspan="8" align="center">
+        </td>
+    </tr>
+</table>
+
+
+<blockquote>
+<p><strong>PWM计数器</strong>为一个15位的寄存器，可设定<strong>1-32767</strong>之间的任意值作为 <strong>PWM</strong> 的周期。<br><strong>PWM波形发生器</strong>内部的计数器从0开始计数，每个<strong>PWM时钟周期</strong>递增1,当内部计数器<br>的计数值达到 <strong>[PWMCH,PWMCL]</strong> 所设定的<strong>PWM周期</strong>时，<strong>PWM波形发生器</strong>内部的计数器<br>将会从0重新开始开始计数，硬件会自动将<strong>PWM</strong>归零中断中断标志位<strong>CBIF</strong>置1,若<strong>ECBI=1</strong>,<br>程序将跳转到相应中断入口执行中断服务程序。</p>
+</blockquote>
+<h3 id="3-3-设置PWM的翻转"><a href="#3-3-设置PWM的翻转" class="headerlink" title="3.3 设置PWM的翻转"></a>3.3 设置PWM的翻转</h3><table>
+    <tr align="center">
+        <td>符号</td>
+        <td>地址</td>
+        <td>B7</td>
+        <td>B6</td>
+        <td>B5</td>
+        <td>B4</td>
+        <td>B3</td>
+        <td>B2</td>
+        <td>B1</td>
+        <td>B0</td>
+    </tr>
+    <tr align="center">
+        <td>PWM0T1L</td>
+        <td>FF00H</td>
+        <td>-</td>
+        <td colspan="7" ></td>
+    </tr>
+    <tr align="center">
+        <td>PWM0T1H</td>
+        <td>FF01H</td>
+        <td colspan="8" ></td>
+    </tr>
+    <tr align="center">
+        <td>PWM0T2L</td>
+        <td>FF02H</td>
+        <td>-</td>
+        <td colspan="7" ></td>
+    </tr>
+    <tr align="center">
+        <td>PWM0T2H</td>
+        <td>FF03H</td>
+        <td colspan="8" ></td>
+    </tr>
+    <tr align="center">
+        <td>PWM1T1L</td>
+        <td>FF10H</td>
+        <td>-</td>
+        <td colspan="7"></td>
+    </tr>
+    <tr align="center">
+        <td>PWM1T1H</td>
+        <td>FF11H</td>
+        <td colspan="8"></td>
+    </tr>
+    <tr align="center">
+        <td>PWM1T2L</td>
+        <td>FF12H</td>
+        <td>-</td>
+        <td colspan="7"></td>
+    </tr>
+    <tr align="center">
+        <td>PWM1T2H</td>
+        <td>FF13H</td>
+        <td colspan="8"></td>
+    </tr>
+    <tr align="center">
+        <td>PWM2T1L</td>
+        <td>FF20H</td>
+        <td>-</td>
+        <td colspan="7"></td>
+    </tr>
+    <tr align="center">
+        <td>PWM2T1H</td>
+        <td>FF21H</td>
+        <td colspan="8"></td>
+    </tr>
+    <tr align="center">
+        <td>PWM2T2L</td>
+        <td>FF22H</td>
+        <td>-</td>
+        <td colspan="7"></td>
+    </tr>
+    <tr align="center">
+        <td>PWM2T2H</td>
+        <td>FF23H</td>
+        <td colspan="8"></td>
+    </tr>
+    <tr align="center">
+        <td>...</td>
+        <td>...</td>
+        <td colspan="8">...</td>
+    </tr>
+    <tr align="center">
+        <td>PWM7T1L</td>
+        <td>FF70H</td>
+        <td>-</td>
+        <td colspan="7"></td>
+    </tr>
+    <tr align="center">
+        <td>PWM7T1H</td>
+        <td>FF71H</td>
+        <td colspan="8"></td>
+    </tr>
+    <tr align="center">
+        <td>PWM7T2L</td>
+        <td>FF72H</td>
+        <td>-</td>
+        <td colspan="7"></td>
+    </tr>
+    <tr align="center">
+        <td>PWM7T2H</td>
+        <td>FF73H</td>
+        <td colspan="8"></td>
+    </tr>
+</table>
+
+
+<blockquote>
+<p>PWM每个通道的 <strong>{PWMnT1H, PWMnT1L}</strong> 和 <strong>{PWMnT2H, PWMnT2L}</strong> 分别组合成两个15位的寄存器，<br>用于控制各路<strong>PWM</strong>每个周期中输出<strong>PWM</strong>波形的两个触发点。在<strong>PWM</strong>的计数周期中，当<strong>PWM</strong>的<br>内部计数值与所设置的<strong>T1</strong>的值 <strong>{PWMnT1H, PWMnT1L}</strong> 相等时，<strong>PWM</strong>的输出波形输出<strong>低电平</strong>;当<br><strong>PWM</strong>的内部计数值与所设置的<strong>T2</strong>的值 <strong>{PWMnT2H,PWMnT2L}</strong> 相等时，<strong>PWM</strong>的输出波形输出 <strong>高<br>电平</strong> 。</p>
+<blockquote>
+<p>注意:当 <strong>{PWMniT1H, PWMniT1L}</strong> 与 <strong>{PWMniT2H, PWMniT2L}</strong> 的值设置相等时，若<strong>PWM</strong>的内部计数<br>值与所设置的<strong>T1/T2</strong>的值相等，则会固定输出<strong>低电平</strong>。</p>
+</blockquote>
+</blockquote>
+<p>这里讲解第一个作为例子，<br><strong>[PWM0T1H,PWM0T1L]</strong><br><strong>[PWM0T2H,PWM0T2L]</strong><br>有两个翻转点，<strong>PWM0T1</strong>和<strong>PWM0T2</strong>。<br>当<strong>PWM计数器内部计数数值=PWM1T1</strong>，会反转一次变为低电平<br><code>需要设置初始电平是高电平</code><br>当<strong>PWM计数器内部计数数值=PWM1T2</strong>,会翻转第二次，变为高电平。</p>
+<h3 id="3-4-设置PWM的具体口允许输出PWM"><a href="#3-4-设置PWM的具体口允许输出PWM" class="headerlink" title="3.4 设置PWM的具体口允许输出PWM"></a>3.4 设置PWM的具体口允许输出PWM</h3><table>
+    <tr align="center">
+        <td>符号</td>
+        <td>地址</td>
+        <td>B7</td>
+        <td>B6</td>
+        <td>B5</td>
+        <td>B4</td>
+        <td>B3</td>
+        <td>B2</td>
+        <td>B1</td>
+        <td>B0</td>
+    </tr>
+    <tr align="center">
+        <td>PWM0CR</td>
+        <td>FF04H</td>
+        <td>ENC0O</td>
+        <td>C0INI</td>
+        <td>-</td>
+        <td colspan="2">C0_S[1:0]</td>
+        <td>EC0I</td>
+        <td>EC0T2SI </td>
+        <td>EC0T1SI </td>
+    </tr>
+    <tr align="center">
+        <td>PWM1CR</td>
+        <td>FF14H</td>
+        <td>ENC1O</td>
+        <td>C1INI</td>
+        <td>-</td>
+        <td colspan="2">C1_S[1:0]</td>
+        <td>EC1I</td>
+        <td>EC1T2SI </td>
+        <td>EC1T1SI </td>
+    </tr>
+    <tr align="center">
+        <td>PWM2CR</td>
+        <td>FF24H</td>
+        <td>ENC2O</td>
+        <td>C2INI</td>
+        <td>-</td>
+        <td colspan="2">C2_S[1:0]</td>
+        <td>EC2I</td>
+        <td>EC2T2SI </td>
+        <td>EC2T1SI </td>
+    </tr>
+    <tr align="center">
+        <td>PWM3CR</td>
+        <td>FF34H</td>
+        <td>ENC3O</td>
+        <td>C3INI</td>
+        <td>-</td>
+        <td colspan="2">C3_S[1:0]</td>
+        <td>EC3I</td>
+        <td>EC3T2SI </td>
+        <td>EC3T1SI </td>
+    </tr>
+    <tr align="center">
+        <td>PWM4CR</td>
+        <td>FF44H</td>
+        <td>ENC40</td>
+        <td>C4INI</td>
+        <td>-</td>
+        <td colspan="2">C4_S[1:0]</td>
+        <td>EC4I</td>
+        <td>EC4T2SI </td>
+        <td>EC4T1SI </td>
+    </tr>
+    <tr align="center">
+        <td>PWM5CR</td>
+        <td>FF54H</td>
+        <td>ENC5O</td>
+        <td>C5INI</td>
+        <td>-</td>
+        <td colspan="2">C5_S[1:0]</td>
+        <td>EC5I</td>
+        <td>EC5T2SI </td>
+        <td>EC5T1SI </td>
+    </tr>
+    <tr align="center">
+        <td>PWM6CR</td>
+        <td>FF64H</td>
+        <td>ENC6O</td>
+        <td>C6INI</td>
+        <td>-</td>
+        <td colspan="2">C6_S[1:0]</td>
+        <td>EC6I</td>
+        <td>EC6T2SI </td>
+        <td>EC6T1SI </td>
+    </tr>
+    <tr align="center">
+        <td>PWM7CR</td>
+        <td>FF74H</td>
+        <td>ENC7O</td>
+        <td>C7INI</td>
+        <td>-</td>
+        <td colspan="2">C7_S[1:0]</td>
+        <td>EC7I</td>
+        <td>EC7T2SI </td>
+        <td>EC7T1SI </td>
+    </tr>
+</table>
+
+<blockquote>
+<p><strong>ENCnO</strong>:<strong>PWM</strong>输出使能位</p>
+<blockquote>
+<p><strong>0</strong>:相应<strong>PWM</strong>通道的端口为<strong>GPIO</strong><br><strong>1</strong>:相应<strong>PWM</strong>通道的端口为<strong>PWM</strong>输出口，受<strong>PWM</strong>波形发生器控制</p>
+</blockquote>
+<p><strong>CnINI</strong>:设置<strong>PWM</strong>输出端口的初始电平</p>
+<blockquote>
+<p><strong>0</strong>:第n通道的<strong>PWM</strong>初始电平为低电平<br><strong>1</strong>:第n通道的<strong>PWM</strong>初始电平为高电平</p>
+</blockquote>
+<p><strong>Cn_ S[1:0]</strong>: <strong>PWM</strong>输出功能脚切换选择，请参考下一个表格。</p>
+<p><strong>ECnI</strong>:第n通道的<strong>PWM</strong>中断使能控制位</p>
+<blockquote>
+<p><strong>0</strong>:关闭第n通道的<strong>PWM</strong>中断<br><strong>1</strong>:使能第n通道的<strong>PWM</strong>中断</p>
+</blockquote>
+<p><strong>ECnT2SI</strong>:第n通道的<strong>PWM</strong>在第2个触发点中断使能控制位</p>
+<blockquote>
+<p><strong>0</strong>:关闭第n通道的<strong>PWM</strong>在第2个触发点中断<br><strong>1</strong>:使能第n通道的<strong>PWM</strong>在第2个触发点中断</p>
+</blockquote>
+<p><strong>ECnTISI</strong>:第n通道的<strong>PWM</strong>在第1个触发点中断使能控制位</p>
+<blockquote>
+<p><strong>0</strong>:关闭第n通道的<strong>PWM</strong>在第1个触发点中断<br><strong>1</strong>:使能第n通道的<strong>PWM</strong>在第1个触发点中断</p>
+</blockquote>
+</blockquote>
+<p>例：C0_S[1:0]:增强型PWM通道0输出脚选择位</p>
+<table>
+<thead>
+<tr>
+<th align="center">C0_S[1:0]</th>
+<th align="center">PWM0</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="center">00</td>
+<td align="center">P2.0</td>
+</tr>
+<tr>
+<td align="center">01</td>
+<td align="center">P1.0</td>
+</tr>
+<tr>
+<td align="center">10</td>
+<td align="center">P6.0</td>
+</tr>
+<tr>
+<td align="center">11</td>
+<td align="center">保留</td>
+</tr>
+</tbody></table>
+<p>其他PWM输出脚选择同理。</p>
+<p>例：<strong>PWM0CR=11000000=0xC0</strong>，<br>  这个指令的功能是。</p>
+<ul>
+<li>允许输出PWM。</li>
+<li>初始电平是高电平。</li>
+<li>在P20输出PWM。</li>
+<li>不允许中断。</li>
+</ul>
+<h3 id="3-5-设置PWM开启"><a href="#3-5-设置PWM开启" class="headerlink" title="3.5 设置PWM开启"></a>3.5 设置PWM开启</h3><table>
+<thead>
+<tr>
+<th align="center">符号</th>
+<th align="center">地址</th>
+<th align="center">B7</th>
+<th align="center">B6</th>
+<th align="center">B5</th>
+<th align="center">B4</th>
+<th align="center">B3</th>
+<th align="center">B2</th>
+<th align="center">B1</th>
+<th align="center">B0</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="center">PWMCR</td>
+<td align="center">FEH</td>
+<td align="center">ENPWM</td>
+<td align="center">ECBI</td>
+<td align="center">-</td>
+<td align="center">-</td>
+<td align="center">-</td>
+<td align="center">-</td>
+<td align="center">-</td>
+<td align="center">-</td>
+</tr>
+</tbody></table>
+<blockquote>
+<p><strong>ENPWM</strong>:使能增强型<strong>PWM</strong>波形发生器</p>
+<blockquote>
+<p>0:关闭<strong>PWM</strong>波形发生器<br>1:使能<strong>PWM</strong>波形发生器，<strong>PWM</strong>计数器开始计数</p>
+</blockquote>
+<p>关于<strong>ENPWM</strong>控制位的重要说明:</p>
+<blockquote>
+<p><strong>ENPWM</strong> 一旦被使能后,内部的<strong>PWM</strong>计数器会立即开始计数,并与<strong>T1/T2</strong>两个触发点的值进行<br>比较。所以<strong>ENPWM</strong>必须在其他所有的PWM设置(包括<strong>T1/T2</strong>触发点的设置、初始电平的设<br>置、<strong>PWM</strong>异常检测的设置以及<strong>PWM</strong>中断设置)都完成后，最后才能使能<strong>ENPWM</strong>位。<br><strong>ENPWM</strong>控制位既是整个<strong>PWM</strong>模块的的使能位，也是<strong>PWM</strong>计数器开始计数的控制位。在<strong>PWM</strong><br>计数器计数的过程中，<strong>ENPWM</strong>控制位被关闭时，<strong>PWM</strong>计数会立即停止，当再次使能<strong>ENPWM</strong><br>控制位时，<strong>PWM</strong>的计数会从0开始重新计数，而不会记忆<strong>PWM</strong>停止计数前的计数值</p>
+</blockquote>
+<p><strong>ECBI</strong>:<strong>PWM</strong>计数器归零中断使能位</p>
+<blockquote>
+<p>0:关闭<strong>PWM</strong>计数器归零中断(<strong>CBIF</strong> 依然会被硬件置位)<br>1:使能<strong>PWM</strong>计数器归零中断</p>
+</blockquote>
+</blockquote>
+<h2 id="L9110驱动芯片"><a href="#L9110驱动芯片" class="headerlink" title="L9110驱动芯片"></a>L9110驱动芯片</h2><h3 id="4-1-L9110S简介"><a href="#4-1-L9110S简介" class="headerlink" title="4.1 L9110S简介"></a>4.1 L9110S简介</h3><p><strong>L9110S</strong>是为控制和驱动电机设计的两通道推挽式功率放大专用集成电路器件，将分立电路集成在单片<strong>IC</strong>之中，使外围器件成本降低，整机可靠性提高。</p>
+<p>该芯片有两个<strong>TTL／CMOS</strong>兼容电平的输入，具有良好的抗干扰性；两个输出端能直接驱动电机的正反向运动，它具有较大的电流驱动能力，每通道能通过<strong>750～800mA</strong>的持续电流，峰值电流能力可达<strong>1.5～2.0A</strong>；同时它具有较低的输出饱和压降与静态电流；内置的钳位二极管能释放感性负载的反向冲击电流，使它在驱动继电器、直流电机、步进电机或开关功率管的使用上安全可靠。<br><strong>L9110S</strong>被广泛应用于玩具汽车电机驱动、自动阀门电机驱动、电磁门锁驱动等电路上。</p>
+<h3 id="4-2-L91110S基本参数"><a href="#4-2-L91110S基本参数" class="headerlink" title="4.2 L91110S基本参数"></a>4.2 L91110S基本参数</h3><ul>
+<li>极限参数：<strong>800mA / 2.5V-12V</strong></li>
+<li>低静态工作电流: <strong>0.00 uA</strong></li>
+<li>宽电源电压范围：<strong>2.5V-12V</strong></li>
+<li>每通道具有<strong>800mA</strong> 连续电流输出能力，精确快速的正反转控制</li>
+<li>超低的饱和电压降</li>
+<li><strong>TTL/CMOS</strong> 输出电平兼容，可直接连<strong>CPU</strong> </li>
+<li>输出内置钳位二极管，适用于感性负载</li>
+<li>精确的脉宽控制和后级驱动集成于单片<strong>IC</strong> 之中</li>
+<li>具备管脚高压保护功能</li>
+<li>工作温度：**-30 ℃-80 ℃**</li>
+</ul>
+<h3 id="4-3-管脚参数"><a href="#4-3-管脚参数" class="headerlink" title="4.3 管脚参数"></a>4.3 管脚参数</h3><p><img src="/images/L9110S.png" srcset="/img/loading.gif" lazyload alt="管脚"></p>
+<table>
+    <tr align="center">
+        <td>序号</td>
+        <td>1</td>
+        <td>2</td>
+        <td>3</td>
+        <td>4</td>
+        <td>5</td>
+        <td>6</td>
+        <td>7</td>
+        <td>8</td>
+    </tr>
+    <tr align="center">
+        <td>符号</td>
+        <td>OA</td>
+        <td>VCC</td>
+        <td>VCC</td>
+        <td>OB</td>
+        <td>GND</td>
+        <td>IA</td>
+        <td>IB</td>
+        <td>GND</td>
+    </tr>
+    <tr align="center">
+        <td>功能 </td>
+        <td>A路输出 </td>
+        <td>电源 </td>
+        <td>电源 </td>
+        <td>B路输出 </td>
+        <td>地址 </td>
+        <td>A路输入 </td>
+        <td>B路输入 </td>
+        <td>地线</td>
+    </tr>
+</table>
+
+<h3 id="4-4-方向与转速控制"><a href="#4-4-方向与转速控制" class="headerlink" title="4.4 方向与转速控制"></a>4.4 方向与转速控制</h3><p><strong>L9110S</strong>控制电机速度和方向非常简单，按上述真值表中的定义，只要向输入端<strong>IA/IB</strong>输入高电平则为转动，<strong>IA</strong>正转，<strong>IB</strong>为反转。</p>
+<p>速度是通过调幅<strong>PWM</strong>信号进行控制，也就是对<strong>IA/IB</strong>写入不同的占空比范围即可控制电机的转速。</p>
+<h2 id="例程"><a href="#例程" class="headerlink" title="例程"></a>例程</h2><figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br><span class="line">119</span><br><span class="line">120</span><br><span class="line">121</span><br><span class="line">122</span><br><span class="line">123</span><br><span class="line">124</span><br><span class="line">125</span><br><span class="line">126</span><br><span class="line">127</span><br><span class="line">128</span><br><span class="line">129</span><br><span class="line">130</span><br><span class="line">131</span><br><span class="line">132</span><br><span class="line">133</span><br><span class="line">134</span><br><span class="line">135</span><br><span class="line">136</span><br><span class="line">137</span><br><span class="line">138</span><br><span class="line">139</span><br><span class="line">140</span><br><span class="line">141</span><br><span class="line">142</span><br><span class="line">143</span><br><span class="line">144</span><br><span class="line">145</span><br><span class="line">146</span><br><span class="line">147</span><br><span class="line">148</span><br><span class="line">149</span><br><span class="line">150</span><br><span class="line">151</span><br><span class="line">152</span><br><span class="line">153</span><br><span class="line">154</span><br><span class="line">155</span><br><span class="line">156</span><br><span class="line">157</span><br><span class="line">158</span><br><span class="line">159</span><br><span class="line">160</span><br><span class="line">161</span><br><span class="line">162</span><br><span class="line">163</span><br><span class="line">164</span><br><span class="line">165</span><br><span class="line">166</span><br><span class="line">167</span><br><span class="line">168</span><br><span class="line">169</span><br><span class="line">170</span><br><span class="line">171</span><br><span class="line">172</span><br><span class="line">173</span><br><span class="line">174</span><br><span class="line">175</span><br><span class="line">176</span><br><span class="line">177</span><br><span class="line">178</span><br><span class="line">179</span><br><span class="line">180</span><br><span class="line">181</span><br><span class="line">182</span><br><span class="line">183</span><br><span class="line">184</span><br></pre></td><td class="code"><pre><code class="hljs c"><span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&quot;STC8A8K64S4A12.h&quot;</span></span><br><span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&quot;stdio.h&quot;</span></span><br><span class="hljs-comment">//测试工作频率为11.0592MHz</span><br><span class="hljs-type">unsigned</span> <span class="hljs-type">int</span> i,j,a;<br><span class="hljs-type">void</span> <span class="hljs-title function_">Sendbyte</span><span class="hljs-params">(<span class="hljs-type">unsigned</span> <span class="hljs-type">char</span> dat)</span>;<br><span class="hljs-type">void</span> <span class="hljs-title function_">Uart_Init</span><span class="hljs-params">(<span class="hljs-type">void</span>)</span>;<br><span class="hljs-type">char</span> <span class="hljs-title function_">Putchar</span><span class="hljs-params">(<span class="hljs-type">char</span> c)</span>;<br><span class="hljs-type">void</span> <span class="hljs-title function_">PWM0_Init</span><span class="hljs-params">(<span class="hljs-type">void</span>)</span>;<br><span class="hljs-type">void</span> <span class="hljs-title function_">Button</span><span class="hljs-params">(<span class="hljs-type">void</span>)</span>;<br><br><span class="hljs-type">void</span> <span class="hljs-title function_">Delay</span><span class="hljs-params">(<span class="hljs-type">unsigned</span> <span class="hljs-type">int</span> xms)</span><span class="hljs-comment">//延时函数</span><br>&#123;<br>	<span class="hljs-type">unsigned</span> <span class="hljs-type">char</span> i, j;<br>	<span class="hljs-keyword">while</span>(xms--)<br>	&#123;<br>		i = <span class="hljs-number">4</span>;<br>		j = <span class="hljs-number">239</span>;<br>		<span class="hljs-keyword">do</span><br>		&#123;<br>			<span class="hljs-keyword">while</span> (--j);<br>		&#125; <span class="hljs-keyword">while</span> (--i);<br>	&#125;<br>&#125;<br><br><span class="hljs-type">void</span> <span class="hljs-title function_">main</span><span class="hljs-params">()</span><br>&#123;<br>	a=<span class="hljs-number">1</span>;<br>	j=<span class="hljs-number">1</span>;<br>	i=<span class="hljs-number">0x800</span>;<span class="hljs-comment">//设置定时器初值</span><br>	PWM0_Init();<span class="hljs-comment">//调用	PWM0_Init()函数</span><br>	Uart_Init();<span class="hljs-comment">//调用	Uart_Init()函数</span><br>    <span class="hljs-keyword">while</span> (<span class="hljs-number">1</span>)<br>	&#123;<br>		Button();<span class="hljs-comment">//调用	Button()函数</span><br>	&#125;<br>&#125;<br><br><span class="hljs-type">void</span> <span class="hljs-title function_">Uart_Init</span><span class="hljs-params">(<span class="hljs-type">void</span>)</span><span class="hljs-comment">//9600bps@11.0592MHz</span><br>&#123;<br>	PCON &amp;= <span class="hljs-number">0x7F</span>;		<span class="hljs-comment">//波特率不倍速</span><br>	SCON = <span class="hljs-number">0x50</span>;		<span class="hljs-comment">//8位数据,可变波特率</span><br>	AUXR &amp;= <span class="hljs-number">0xBF</span>;		<span class="hljs-comment">//定时器时钟12T模式</span><br>	AUXR &amp;= <span class="hljs-number">0xFE</span>;		<span class="hljs-comment">//串口1选择定时器1为波特率发生器</span><br>	TMOD &amp;= <span class="hljs-number">0x0F</span>;		<span class="hljs-comment">//设置定时器模式</span><br>	TMOD |= <span class="hljs-number">0x20</span>;		<span class="hljs-comment">//设置定时器模式</span><br>	TL1 = <span class="hljs-number">0xFD</span>;		<span class="hljs-comment">//设置定时初始值</span><br>	TH1 = <span class="hljs-number">0xFD</span>;		<span class="hljs-comment">//设置定时重载值</span><br>	ET1 = <span class="hljs-number">0</span>;		<span class="hljs-comment">//禁止定时器%d中断</span><br>	TR1 = <span class="hljs-number">1</span>;		<span class="hljs-comment">//定时器1开始计时</span><br>&#125;<br><br><span class="hljs-type">void</span> <span class="hljs-title function_">Sendbyte</span><span class="hljs-params">(<span class="hljs-type">unsigned</span> <span class="hljs-type">char</span> dat)</span><span class="hljs-comment">//上传字符</span><br>&#123;<br>    SBUF=dat;<br>    <span class="hljs-keyword">while</span> (!TI);<br>    TI=<span class="hljs-number">0</span>;<br>    <br>&#125;<br><br><span class="hljs-type">char</span> <span class="hljs-title function_">Putchar</span><span class="hljs-params">(<span class="hljs-type">char</span> c)</span><span class="hljs-comment">//上传字符</span><br>&#123;<br>    Sendbyte(c);<br>    <span class="hljs-keyword">return</span> c;<br>&#125;<br><br><span class="hljs-type">void</span> <span class="hljs-title function_">PWM0_Init</span><span class="hljs-params">(<span class="hljs-type">void</span>)</span><span class="hljs-comment">//PWM初始化函数</span><br>&#123;<br>	P_SW2=<span class="hljs-number">0x80</span>;<span class="hljs-comment">//打开设置开关</span><br>    PWMCKS=<span class="hljs-number">0X0b</span>;<span class="hljs-comment">//PWM配置寄存器,设置PWM时钟源系统时钟/12=11.0592Mhz/12；   </span><br>	PWMC=<span class="hljs-number">0X1000</span>;<span class="hljs-comment">//设置PWM周期1000H </span><br>	PWM0T1=i;<span class="hljs-comment">//设置低电平点</span><br>	PWM0T2=<span class="hljs-number">0X0000</span>;<span class="hljs-comment">//设置高电平点</span><br>    PWMCFG = <span class="hljs-number">0x00</span>;<br>    PWMCR |=<span class="hljs-number">0x80</span>;<span class="hljs-comment">//使能PWM模块</span><br>    P_SW2 =<span class="hljs-number">0x00</span>;<span class="hljs-comment">//关闭设置开关</span><br>&#125;<br><br><span class="hljs-type">void</span> <span class="hljs-title function_">Button</span><span class="hljs-params">(<span class="hljs-type">void</span>)</span><span class="hljs-comment">//按键子函数</span><br>&#123;<br>	    <span class="hljs-keyword">if</span>(P30==<span class="hljs-number">0</span>)<span class="hljs-comment">//减速</span><br>		&#123;<br>			Delay(<span class="hljs-number">20</span>); <span class="hljs-comment">//按键判断</span><br>			<span class="hljs-keyword">while</span> (P30==<span class="hljs-number">0</span>);<br>			Delay(<span class="hljs-number">20</span>);<br>			<span class="hljs-keyword">if</span>(i&lt;<span class="hljs-number">0X1000</span>)<br>			&#123;<br>				i=i+<span class="hljs-number">0X0040</span>;<span class="hljs-comment">//改变占空比</span><br>			&#125;<br>			P_SW2=<span class="hljs-number">0x80</span>;<span class="hljs-comment">//打开设置</span><br>			PWM0T1=i;<span class="hljs-comment">//设置低电平点  </span><br>			PWM0T2=<span class="hljs-number">0X0000</span>;<span class="hljs-comment">//设置高电平点</span><br>			PWM1T1=i;    <br>			PWM1T2=<span class="hljs-number">0X0000</span>;<br>			P_SW2 =<span class="hljs-number">0x00</span>;<span class="hljs-comment">//关闭设置</span><br>			<span class="hljs-built_in">printf</span>(<span class="hljs-string">&quot;Speed:%.3f%% &quot;</span>,(<span class="hljs-number">1</span>-i/<span class="hljs-number">4096.0</span>)*<span class="hljs-number">100</span>);<span class="hljs-comment">//输出占空比到上位机</span><br>		&#125;<br>		<span class="hljs-keyword">if</span>(P31==<span class="hljs-number">0</span>)<span class="hljs-comment">//加速</span><br>		&#123;<br>			Delay(<span class="hljs-number">20</span>); <br>			<span class="hljs-keyword">while</span> (P31==<span class="hljs-number">0</span>);<br>			Delay(<span class="hljs-number">20</span>);<br>			<span class="hljs-keyword">if</span>(i&gt;<span class="hljs-number">0</span>)<br>			&#123;<br>				i=i<span class="hljs-number">-0X0040</span>;<br>			&#125;<br>			P_SW2=<span class="hljs-number">0x80</span>;<br>			PWM0T1=i;<br>			PWM0T2=<span class="hljs-number">0X0000</span>;<br>			PWM1T1=i;<br>			PWM1T2=<span class="hljs-number">0X0000</span>;<br>			P_SW2 =<span class="hljs-number">0x00</span>;<br>			<span class="hljs-built_in">printf</span>(<span class="hljs-string">&quot;Speed:%.3f%% &quot;</span>,(<span class="hljs-number">1</span>-i/<span class="hljs-number">4096.0</span>)*<span class="hljs-number">100</span>);<br>		&#125;<br>		<span class="hljs-keyword">if</span>(P32==<span class="hljs-number">0</span>)<span class="hljs-comment">//换向</span><br>		&#123;<br>			Delay(<span class="hljs-number">20</span>); <br>			<span class="hljs-keyword">while</span> (P32==<span class="hljs-number">0</span>);<br>			Delay(<span class="hljs-number">20</span>);<br>			<span class="hljs-keyword">if</span>(j==<span class="hljs-number">1</span>)<br>			&#123;	<br>				a=<span class="hljs-number">1</span>;<br>				j=<span class="hljs-number">0</span>;<br>				P_SW2=<span class="hljs-number">0x80</span>;<br>				PWM0CR = <span class="hljs-number">0xC0</span>;<span class="hljs-comment">//在P20输出PWM0，初始高电平</span><br>				PWM1CR = <span class="hljs-number">0X00</span>;<span class="hljs-comment">//关闭P21输出PWM1</span><br>				P_SW2 =<span class="hljs-number">0x00</span>;<br>				<span class="hljs-built_in">printf</span>(<span class="hljs-string">&quot;Forward &quot;</span>);<br>			&#125;<br>			<span class="hljs-keyword">else</span><br>			&#123;<br>				a=<span class="hljs-number">1</span>;<br>				j=<span class="hljs-number">1</span>;<br>				P_SW2=<span class="hljs-number">0x80</span>;<br>				PWM1CR = <span class="hljs-number">0xC0</span>;<span class="hljs-comment">//在P21输出PWM0，初始高电平</span><br>				PWM0CR = <span class="hljs-number">0X00</span>;<span class="hljs-comment">//关闭P20输出PWM1</span><br>				P_SW2 =<span class="hljs-number">0x00</span>;<br>				<span class="hljs-built_in">printf</span>(<span class="hljs-string">&quot;Backward &quot;</span>);<br>			&#125;<br>			P_SW2=<span class="hljs-number">0x80</span>;<br>			PWM0T1=i;<br>			PWM0T2=<span class="hljs-number">0X0000</span>;<br>			PWM1T1=i;<br>			PWM1T2=<span class="hljs-number">0X0000</span>;<br>			P_SW2 =<span class="hljs-number">0x00</span>;<br>			<span class="hljs-built_in">printf</span>(<span class="hljs-string">&quot;Speed:%.3f%% &quot;</span>,(<span class="hljs-number">1</span>-i/<span class="hljs-number">4096.0</span>)*<span class="hljs-number">100</span>);<br>		&#125;<br>		<span class="hljs-keyword">if</span>(P33==<span class="hljs-number">0</span>)<span class="hljs-comment">//停止&amp;启动</span><br>		&#123;<br>			Delay(<span class="hljs-number">20</span>); <br>			<span class="hljs-keyword">while</span> (P33==<span class="hljs-number">0</span>);<br>			Delay(<span class="hljs-number">20</span>);<br>			<span class="hljs-keyword">if</span>(a==<span class="hljs-number">1</span>)<br>			&#123;<br>				a=<span class="hljs-number">0</span>;<br>				P_SW2=<span class="hljs-number">0x80</span>;<br>				PWM0CR = <span class="hljs-number">0x00</span>;<span class="hljs-comment">//关闭P20输出PWM0</span><br>				PWM1CR = <span class="hljs-number">0X00</span>;<span class="hljs-comment">//关闭P21输出PWM1</span><br>				P_SW2 =<span class="hljs-number">0x00</span>;<br>				<span class="hljs-built_in">printf</span>(<span class="hljs-string">&quot;Stop &quot;</span>);<br>			&#125;<br>			<span class="hljs-keyword">else</span><br>			&#123;<br>				<span class="hljs-keyword">if</span>(j==<span class="hljs-number">0</span>)<br>				&#123;<br>					a=<span class="hljs-number">1</span>;<br>					P_SW2=<span class="hljs-number">0x80</span>;<br>					PWM0CR = <span class="hljs-number">0xC0</span>;<span class="hljs-comment">//在P20输出PWM0，初始高电平</span><br>					PWM1CR = <span class="hljs-number">0X00</span>;<span class="hljs-comment">//关闭P21输出PWM1</span><br>					P_SW2 =<span class="hljs-number">0x00</span>;<br>					<span class="hljs-built_in">printf</span>(<span class="hljs-string">&quot;Start &quot;</span>);<br>				&#125;<br>				<span class="hljs-keyword">else</span><br>				&#123;<br>					a=<span class="hljs-number">1</span>;<br>					P_SW2=<span class="hljs-number">0x80</span>;<br>					PWM1CR = <span class="hljs-number">0xC0</span>;<span class="hljs-comment">//在P21输出PWM0，初始高电平</span><br>					PWM0CR = <span class="hljs-number">0X00</span>;<span class="hljs-comment">//关闭P20输出PWM1</span><br>					P_SW2 =<span class="hljs-number">0x00</span>;<span class="hljs-comment">//关闭设置</span><br>					<span class="hljs-built_in">printf</span>(<span class="hljs-string">&quot;Start &quot;</span>);<br>				&#125;<br>			&#125;<br>			<span class="hljs-built_in">printf</span>(<span class="hljs-string">&quot;Speed:%.3f%% &quot;</span>,(<span class="hljs-number">1</span>-i/<span class="hljs-number">4096.0</span>)*<span class="hljs-number">100</span>);<br>		&#125;<br>&#125; <br></code></pre></td></tr></table></figure>
+
+
+                
+              </div>
+            
+            <hr/>
+            <div>
+              <div class="post-metas my-3">
+  
+    <div class="post-meta mr-3 d-flex align-items-center">
+      <i class="iconfont icon-category"></i>
+      
+
+<span class="category-chains">
+  
+  
+    
+      <span class="category-chain">
+        
+  <a href="/categories/SAO-Knight/" class="category-chain-item">SAO_Knight</a>
+  
+  
+
+      </span>
+    
+  
+</span>
+
+    </div>
+  
+  
+    <div class="post-meta">
+      <i class="iconfont icon-tags"></i>
+      
+        <a href="/tags/51%E5%8D%95%E7%89%87%E6%9C%BA/">#51单片机</a>
+      
+    </div>
+  
+</div>
+
+
+              
+  
+
+  <div class="license-box my-3">
+    <div class="license-title">
+      <div>PWM信号的产生与电机的驱动</div>
+      <div>http://kirito.top/2022/05/19/pwmdj/</div>
+    </div>
+    <div class="license-meta">
+      
+        <div class="license-meta-item">
+          <div>作者</div>
+          <div>SAO_Knight</div>
+        </div>
+      
+      
+        <div class="license-meta-item license-meta-date">
+          <div>发布于</div>
+          <div>2022年5月19日</div>
+        </div>
+      
+      
+      <div class="license-meta-item">
+        <div>许可协议</div>
+        <div>
+          
+            
+            
+              <a target="_blank" href="https://creativecommons.org/licenses/by/4.0/">
+              <span class="hint--top hint--rounded" aria-label="BY - 署名">
+                <i class="iconfont icon-by"></i>
+              </span>
+              </a>
+            
+          
+        </div>
+      </div>
+    </div>
+    <div class="license-icon iconfont"></div>
+  </div>
+
+
+
+              
+                <div class="post-prevnext my-3">
+                  <article class="post-prev col-6">
+                    
+                    
+                      <a href="/2022/05/21/keilc51/" title="Keil C51的安装">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">Keil C51的安装</span>
+                        <span class="visible-mobile">上一篇</span>
+                      </a>
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/2022/04/06/shizhong/" title="基于51单片机数码管的时钟显示">
+                        <span class="hidden-mobile">基于51单片机数码管的时钟显示</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+  <article id="comments" lazyload>
+    
+  <div id="valine"></div>
+  <script type="text/javascript">
+    Fluid.utils.loadComments('#valine', function() {
+      Fluid.utils.createScript('https://cdn.jsdelivr.net/npm/valine@1/dist/Valine.min.js', function() {
+        var options = Object.assign(
+          {"appId":"GuETE72RPvqN5uwHdIbycKLr-gzGzoHsz","appKey":"v91uRJExaGc3ALDNzyCpldju","path":"window.location.pathname","placeholder":"来写点东西吧,记得在上方填写昵称","avatar":"retro","meta":["nick","mail","link"],"requiredFields":[],"pageSize":10,"lang":"zh-CN","highlight":false,"recordIP":false,"serverURLs":"","emojiCDN":null,"emojiMaps":null,"enableQQ":true},
+          {
+            el: "#valine",
+            path: window.location.pathname
+          }
+        )
+        new Valine(options);
+        Fluid.utils.waitElementVisible('#valine .vcontent', () => {
+          var imgSelector = '#valine .vcontent img:not(.vemoji)';
+          Fluid.plugins.imageCaption(imgSelector);
+          Fluid.plugins.fancyBox(imgSelector);
+        })
+      });
+    });
+  </script>
+  <noscript>Please enable JavaScript to view the comments</noscript>
+
+
+  </article>
+
+
+          </article>
+        </div>
+      </div>
+    </div>
+
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+  <aside class="sidebar" style="margin-left: -1rem">
+    <div id="toc">
+  <p class="toc-header"><i class="iconfont icon-list"></i>&nbsp;目录</p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+
+
+  </aside>
+
+
+    </div>
+  </div>
+</div>
+
+
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+
+
+
+
+    
+
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v" for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+    
+
+    
+      <div class="col-lg-7 mx-auto nopadding-x-md">
+        <div class="container custom mx-auto">
+          <link rel="stylesheet" href="/dist/APlayer.min.css"> <div id="aplayer"></div> <script type="text/javascript" src="/dist/APlayer.min.js"></script> <script type="text/javascript" src="/js/music.js"></script> 
+        </div>
+      </div>
+    
+
+  </main>
+  <!--<div id="aplayerContent">
+  <link rel="stylesheet" href="/dist/APlayer.min.css">
+  <div id="aplayer"></div>
+  <script type="text/javascript" src="/dist/APlayer.min.js"></script>
+  <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/meting@2.0.1/dist/Meting.min.js"></script>
+  <meting-js server="netease" type="playlist" id="5347406379" fixed="true" autoplay="true" loop="all" order="random" lrc-type="false"></meting-js>'
+  </div>-->
+
+  <footer>
+    <div class="footer-inner">
+  
+    <div class="footer-content">
+       <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> 
+    </div>
+  
+  
+    <div class="statistics">
+  
+  
+
+  
+    
+      <span id="busuanzi_container_site_pv" style="display: none">
+        总访问量 
+        <span id="busuanzi_value_site_pv"></span>
+         次
+      </span>
+    
+    
+      <span id="busuanzi_container_site_uv" style="display: none">
+        总访客数 
+        <span id="busuanzi_value_site_uv"></span>
+         人
+      </span>
+    
+    
+  
+</div>
+
+  
+  
+  
+</div>
+
+  </footer>
+
+  <!-- Scripts -->
+  
+  <script  src="https://cdn.jsdelivr.net/npm/nprogress@0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/nprogress@0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://cdn.jsdelivr.net/npm/jquery@3/dist/jquery.min.js" ></script>
+<script  src="https://cdn.jsdelivr.net/npm/bootstrap@4/dist/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+
+  <script  src="https://cdn.jsdelivr.net/npm/typed.js@2/lib/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var subtitle = document.getElementById('subtitle');
+      if (!subtitle || !typing) {
+        return;
+      }
+      var text = subtitle.getAttribute('data-typed-text');
+      
+        typing(text);
+      
+    })(window, document);
+  </script>
+
+
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+
+  
+<script>
+  Fluid.utils.createScript('https://cdn.jsdelivr.net/npm/tocbot@4/dist/tocbot.min.js', function() {
+    var toc = jQuery('#toc');
+    if (toc.length === 0 || !window.tocbot) { return; }
+    var boardCtn = jQuery('#board-ctn');
+    var boardTop = boardCtn.offset().top;
+
+    window.tocbot.init({
+      tocSelector     : '#toc-body',
+      contentSelector : '.markdown-body',
+      headingSelector : CONFIG.toc.headingSelector || 'h1,h2,h3,h4,h5,h6',
+      linkClass       : 'tocbot-link',
+      activeLinkClass : 'tocbot-active-link',
+      listClass       : 'tocbot-list',
+      isCollapsedClass: 'tocbot-is-collapsed',
+      collapsibleClass: 'tocbot-is-collapsible',
+      collapseDepth   : CONFIG.toc.collapseDepth || 0,
+      scrollSmooth    : true,
+      headingsOffset  : -boardTop
+    });
+    if (toc.find('.toc-list-item').length > 0) {
+      toc.css('visibility', 'visible');
+    }
+  });
+</script>
+
+
+  <script src=https://cdn.jsdelivr.net/npm/clipboard@2/dist/clipboard.min.js></script>
+
+  <script>Fluid.plugins.codeWidget();</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://cdn.jsdelivr.net/npm/anchor-js@4/anchor.min.js', function() {
+    window.anchors.options = {
+      placement: CONFIG.anchorjs.placement,
+      visible  : CONFIG.anchorjs.visible
+    };
+    if (CONFIG.anchorjs.icon) {
+      window.anchors.options.icon = CONFIG.anchorjs.icon;
+    }
+    var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+    var res = [];
+    for (var item of el) {
+      res.push('.markdown-body > ' + item.trim());
+    }
+    if (CONFIG.anchorjs.placement === 'left') {
+      window.anchors.options.class = 'anchorjs-link-left';
+    }
+    window.anchors.add(res.join(', '));
+  });
+</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3/dist/jquery.fancybox.min.js', function() {
+    Fluid.plugins.fancyBox();
+  });
+</script>
+
+
+  <script>Fluid.plugins.imageCaption();</script>
+
+  <script  src="/js/local-search.js" ></script>
+
+  <script defer src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js" ></script>
+
+
+
+
+  
+<script src="//cdn.jsdelivr.net/npm/aplayer/dist/APlayer.min.js"></script>
+<script src="//cdn.jsdelivr.net/gh/metowolf/MetingJS@1.2/dist/Meting.min.js"></script>
+<script src="/js/live2d.js"></script>
+<script src="/js/music.js"></script>
+<script src="//cdn.jsdelivr.net/gh/bynotes/texiao/source/js/love.js"></script>
+<script src="//cdn.jsdelivr.net/gh/bynotes/texiao/source/js/dianjichuzi.js"></script>
+<script src="///cdn.jsdelivr.net/gh/bynotes/texiao/source/js/xiaoxuehua.js"></script>
+<script src="//cdn.jsdelivr.net/gh/bynotes/texiao/source/js/caidai.js"></script>
+
+
+
+<!-- 主题的启动项，将它保持在最底部 -->
+<!-- the boot of the theme, keep it at the bottom -->
+<script  src="/js/boot.js" ></script>
+
+
+  
+
+  <noscript>
+    <div class="noscript-warning">博客在允许 JavaScript 运行的环境下浏览效果更佳</div>
+  </noscript>
+</body>
+</html>

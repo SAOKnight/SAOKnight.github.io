@@ -1,0 +1,844 @@
+
+
+<!DOCTYPE html>
+<html lang="zh-CN" data-default-color-scheme=auto>
+
+
+
+<head>
+  <meta charset="UTF-8">
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/touxiang.jpg">
+  <link rel="icon" href="/img/touxiang.jpg">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="author" content="SAO_Knight">
+  <meta name="keywords" content="">
+  
+    <meta name="description" content="基于51单片机定时的数码管显示时间单片机的定时器中断  51单片机内部有两个16位可以编程的定时器T0&#x2F;计数器T1，52单片机内多了一个T2定时器&#x2F;计数器。 定时器&#x2F;计数器的实质是加1计数器(16位),由高 8 位和低 8 位 2 个寄存器组成。  TMOD 是定时器&#x2F;计数器的工作方式寄存器，确定工作方式和功能  TCON 是控制寄存器，控制 T0、T1 的启动和停止及设置溢出标志。 加 1 计数">
+<meta property="og:type" content="article">
+<meta property="og:title" content="基于51单片机数码管的时钟显示">
+<meta property="og:url" content="http://kirito.top/2022/04/06/shizhong/index.html">
+<meta property="og:site_name" content="Kirito避难所">
+<meta property="og:description" content="基于51单片机定时的数码管显示时间单片机的定时器中断  51单片机内部有两个16位可以编程的定时器T0&#x2F;计数器T1，52单片机内多了一个T2定时器&#x2F;计数器。 定时器&#x2F;计数器的实质是加1计数器(16位),由高 8 位和低 8 位 2 个寄存器组成。  TMOD 是定时器&#x2F;计数器的工作方式寄存器，确定工作方式和功能  TCON 是控制寄存器，控制 T0、T1 的启动和停止及设置溢出标志。 加 1 计数">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2022-04-06T13:20:51.000Z">
+<meta property="article:modified_time" content="2022-07-04T11:32:27.726Z">
+<meta property="article:author" content="SAO_Knight">
+<meta property="article:tag" content="51单片机">
+<meta name="twitter:card" content="summary_large_image">
+  
+  
+    <meta name="referrer" content="no-referrer-when-downgrade">
+  
+  
+  <title>基于51单片机数码管的时钟显示 - Kirito避难所</title>
+
+  <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4/dist/css/bootstrap.min.css" />
+
+
+
+  <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/github-markdown-css@4/github-markdown.min.css" />
+
+  <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/hint.css@2/hint.min.css" />
+
+  <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3/dist/jquery.fancybox.min.css" />
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+<!-- Do not modify the link that theme dependent icons -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_hj8rtnfg7um.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_lbnruvf0jn.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+
+  <link id="highlight-css" rel="stylesheet" href="/css/highlight.css" />
+  
+    <link id="highlight-css-dark" rel="stylesheet" href="/css/highlight-dark.css" />
+  
+
+
+
+  
+<link rel="stylesheet" href="//cdn.jsdelivr.net/npm/aplayer/dist/APlayer.min.css">
+<link rel="stylesheet" href="/css/extension.css">
+
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    Fluid.ctx = Object.assign({}, Fluid.ctx)
+    var CONFIG = {"hostname":"kirito.top","root":"/","version":"1.9.2","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false,"scope":[]},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"right","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"code_language":{"enable":true,"default":"TEXT"},"copy_btn":true,"image_caption":{"enable":true},"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"placement":"right","headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":false,"follow_dnt":true,"baidu":null,"google":null,"gtag":null,"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname","ignore_local":false}},"search_path":"/local-search.xml"};
+
+    if (CONFIG.web_analytics.follow_dnt) {
+      var dntVal = navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack;
+      Fluid.ctx.dnt = dntVal && (dntVal.startsWith('1') || dntVal.startsWith('yes') || dntVal.startsWith('on'));
+    }
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+  
+
+
+  
+<meta name="generator" content="Hexo 5.4.2"></head>
+
+
+<body>
+  
+  
+  <header>
+    
+
+<div class="header-inner" style="height: 70vh;">
+  <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand" href="/">
+      <strong>Kirito</strong>
+    </a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/">
+                <i class="iconfont icon-home-fill"></i>
+                首页
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/">
+                <i class="iconfont icon-archive-fill"></i>
+                归档
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/">
+                <i class="iconfont icon-category-fill"></i>
+                分类
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/">
+                <i class="iconfont icon-tags-fill"></i>
+                标签
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/">
+                <i class="iconfont icon-user-fill"></i>
+                关于
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              &nbsp;<i class="iconfont icon-search"></i>&nbsp;
+            </a>
+          </li>
+          
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">&nbsp;<i
+                class="iconfont icon-dark" id="color-toggle-icon"></i>&nbsp;</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+  
+
+<div id="banner" class="banner" parallax=true
+     style="background: url('/img/AboutHead.jpg') no-repeat center center; background-size: cover;">
+  <div class="full-bg-img">
+    <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+      <div class="banner-text text-center fade-in-up">
+        <div class="h2">
+          
+            <span id="subtitle" data-typed-text="基于51单片机数码管的时钟显示"></span>
+          
+        </div>
+
+        
+          
+  <div class="mt-3">
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-author" aria-hidden="true"></i>
+        SAO_Knight
+      </span>
+    
+    
+      <span class="post-meta">
+        <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+        <time datetime="2022-04-06 21:20" pubdate>
+          2022年4月6日 晚上
+        </time>
+      </span>
+    
+  </div>
+
+  <div class="mt-1">
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-chart"></i>
+        
+          <!-- compatible with older versions-->
+          3.9k 字
+        
+      </span>
+    
+
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-clock-fill"></i>
+        
+        
+        
+          <!-- compatible with older versions-->
+          33 分钟
+        
+      </span>
+    
+
+    
+    
+  </div>
+
+
+        
+      </div>
+
+      
+    </div>
+  </div>
+</div>
+
+</div>
+
+    <script src="https://cdn.bootcss.com/jquery/3.4.1/jquery.min.js"></script>
+    <script src="https://cdn.bootcss.com/jquery.pjax/2.0.1/jquery.pjax.min.js"></script>
+  </header>
+
+  <main>
+    
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+
+    </div>
+
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div id="board">
+          <article class="post-content mx-auto">
+            <!-- SEO header -->
+            <h1 style="display: none">基于51单片机数码管的时钟显示</h1>
+            
+            
+              <div class="markdown-body">
+                
+                <h2 id="基于51单片机定时的数码管显示时间"><a href="#基于51单片机定时的数码管显示时间" class="headerlink" title="基于51单片机定时的数码管显示时间"></a>基于51单片机定时的数码管显示时间</h2><h3 id="单片机的定时器中断"><a href="#单片机的定时器中断" class="headerlink" title="单片机的定时器中断"></a>单片机的定时器中断</h3><p>  <strong>51单片机</strong>内部有两个16位可以编程的定时器<strong>T0</strong>/计数器<strong>T1</strong>，<strong>52单片机</strong>内多了一个<strong>T2</strong>定时器/计数器。</p>
+<p>定时器/计数器的实质是<strong>加1计数器(16位)</strong>,由高 8 位和低 8 位 2 个寄存器组成。<br>  <strong>TMOD</strong> 是定时器/计数器的工作方式寄存器，确定工作方式和功能<br>  <strong>TCON</strong> 是控制寄存器，控制 <strong>T0</strong>、<strong>T1</strong> 的启动和停止及设置溢出标志。</p>
+<p>加 1 计数器输入的计数脉冲有两个来源，一个是由系统的时钟振荡器输出脉冲经 12 分频后送来，另一个是 <strong>T0</strong> 或 <strong>T1</strong> 引脚输入的外部脉冲源，每来一个脉冲计数器加 1,当加到计数器为全 1 时，再输入一个脉冲就使计数器回零，且计数器的溢出使 <strong>TCON</strong> 寄存器中 <strong>TF0</strong> 或 <strong>TF1</strong> 置 1,向 <strong>CPU</strong> 发出中断请求(定时器/计数器中断允许时)。<br>如果定时器/计数器工作于定时模式，则表示定时时间已到；<br>如果工作于计数模式，则表示计数值已满。</p>
+<p>由上可知，由溢出的计数器的值减去计数初值才是计数器的计数值。<br>设置为定时器模式时，加 1 计数器是对内部机器周期计数(<strong>1</strong> 个机器周期等于 <strong>12</strong> 个振荡周期，即计数频率为晶振频率的 <strong>1/12</strong>)。<br>计数值 <strong>N</strong> 乘以机器周期 <strong>T</strong> 就是定时时间 <strong>t</strong>。</p>
+<hr>
+<h3 id="定时器初值计算"><a href="#定时器初值计算" class="headerlink" title="定时器初值计算"></a>定时器初值计算</h3><p>定时时间 <strong>T=(2 的 N 次方-X)12/单片机晶振频率</strong>（方式0时，<strong>N=13</strong>。方式1时，<strong>N=16</strong>。方式2时，<strong>N=8</strong>。）</p>
+<blockquote>
+<p>打个比方:计时 2ms,当晶振为 12Mhz。</p>
+<blockquote>
+<p>方法一 :定时时间 <strong>2ms=(2 的 16 次方-时间常数 X)12/f</strong> 即晶振为 <strong>12M f =121000000</strong><br><strong>2ms=(2 的 16 次方-时间常数 X)12/(121000000)</strong></p>
+</blockquote>
+<blockquote>
+<p>方法二 :<strong>12MHz</strong> 除 <strong>12</strong> 为 <strong>1MHz</strong>，也就是说<strong>1s = 1000000</strong> 次机器周期。<strong>2ms = 50000</strong> 次 机器周期。</p>
+</blockquote>
+</blockquote>
+<blockquote>
+<p>时间常数 <strong>X=2000</strong></p>
+<blockquote>
+<p><strong>TH0=(65536-2000)/256</strong>; 就是转换成十六进制 再除以 <strong>256</strong> 取整数 即高 8 位送时间常数寄存器的高 8 位计数器<br><strong>TL0=(65536-2000)%256</strong>; 就是转换成十六进制 再除以 <strong>256</strong> 取余数 即低 8 位送时间常数寄存器的低 8 位计数器</p>
+</blockquote>
+</blockquote>
+<p>单片机在使用定时器或计数器功能时，通常需要设置 2 个与定时器有关的寄存器:<br>定时器/计数器工作方式寄存器 <strong>TMOD</strong> 与定时器/计数器控制寄存器 <strong>TCON</strong>。</p>
+<h4 id="定时器-计数器工作方式寄存器-TMOD"><a href="#定时器-计数器工作方式寄存器-TMOD" class="headerlink" title="定时器/计数器工作方式寄存器 TMOD"></a>定时器/计数器工作方式寄存器 TMOD</h4><p><strong>TMOD 各位定义如下表：</strong></p>
+<table>
+<thead>
+<tr>
+<th align="center">位序号</th>
+<th align="center">D7</th>
+<th align="center">D6</th>
+<th align="center">D5</th>
+<th align="center">D4</th>
+<th align="center">D3</th>
+<th align="center">D2</th>
+<th align="center">D1</th>
+<th align="center">D0</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="center">位符号</td>
+<td align="center">GATE</td>
+<td align="center">C/T</td>
+<td align="center">M1</td>
+<td align="center">M0</td>
+<td align="center">GATE</td>
+<td align="center">C/T</td>
+<td align="center">M1</td>
+<td align="center">M0</td>
+</tr>
+</tbody></table>
+<p><strong>D7–D4</strong> 是定时器1,<strong>D3–D0</strong> 是定时器0<br><strong>TMOD</strong> 的高4位用于设置定时器1,低4位用于设置定时器0,对应4位含义如下：</p>
+<blockquote>
+<p><strong>GATE</strong>——门控制位。</p>
+<blockquote>
+<p><strong>GATE=0</strong>,定时器/计数器启动与停止仅受 <strong>TCON</strong> 寄存器中的 <strong>TRX(X=0, 1)</strong> 来控制;<br><strong>GATE=1</strong>,定时器/计数器启动与停止由 <strong>TCON</strong> 寄存器中的 <strong>TRX (X=0, 1)</strong> 和外部中断引脚 <strong>(INT0 或 INT1)</strong> 上的电平状态来共同控制.</p>
+</blockquote>
+</blockquote>
+<blockquote>
+<p><strong>C/T</strong>——定时器模式和计数器模式选择位。</p>
+<blockquote>
+<p><strong>C/T=1</strong>, 为计数器模式。<br><strong>C/T=0</strong>, 为定时器模式。</p>
+</blockquote>
+</blockquote>
+<blockquote>
+<p><strong>M1 M0</strong> 是工作方式选择位。<br>每个定时器计数器都有 4 种工作方式，它们由 <strong>M1 M0</strong> 设定,如下表所示</p>
+</blockquote>
+<table>
+<thead>
+<tr>
+<th align="center">M1</th>
+<th align="center">M0</th>
+<th align="center">工作方式</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="center">0</td>
+<td align="center">0</td>
+<td align="center">方式 0 是 13 位定时器/计数器</td>
+</tr>
+<tr>
+<td align="center">0</td>
+<td align="center">1</td>
+<td align="center">方式 1 是 16 位定时器/计数器</td>
+</tr>
+<tr>
+<td align="center">1</td>
+<td align="center">0</td>
+<td align="center">方式 2 是 8 位初值自动重装的 8 位定时器/计数器</td>
+</tr>
+<tr>
+<td align="center">1</td>
+<td align="center">1</td>
+<td align="center">方式 3 是仅仅适用与 T0 分为两个 8 位计数器，T1 停止计数</td>
+</tr>
+</tbody></table>
+<h4 id="定时器-计数器控制寄存器-TCON"><a href="#定时器-计数器控制寄存器-TCON" class="headerlink" title="定时器/计数器控制寄存器 TCON"></a>定时器/计数器控制寄存器 TCON</h4><p>定时器/计数器控制寄存器 <strong>TCON</strong> 在特殊功能寄存器中，字节地址为 <strong>88H</strong>, 位地址(由低位到高位)分别是 <strong>88H~8FH</strong>，可进行位寻址。<strong>TCON</strong> 寄存器用来控制定时器的启、停，以及标志定时器溢出和中断情况。单片机复位时，<strong>TCON</strong> 全部被清0.<br>其各位定义如下表所示.其中 <strong>TF1</strong>、 <strong>TR1</strong>、<strong>TF0</strong> 和 <strong>TR0</strong> 位用于定时器/计数器; <strong>IE1</strong>、 <strong>IT1</strong>、 <strong>IE0</strong> 和 <strong>IT0</strong> 位用于外部中断。</p>
+<table>
+<thead>
+<tr>
+<th align="center">位序号</th>
+<th align="center">D7</th>
+<th align="center">D6</th>
+<th align="center">D5</th>
+<th align="center">D4</th>
+<th align="center">D3</th>
+<th align="center">D2</th>
+<th align="center">D1</th>
+<th align="center">D0</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="center">位符号</td>
+<td align="center">TF1</td>
+<td align="center">TR1</td>
+<td align="center">TF0</td>
+<td align="center">TR0</td>
+<td align="center">IE1</td>
+<td align="center">IT1</td>
+<td align="center">IE0</td>
+<td align="center">IT0</td>
+</tr>
+<tr>
+<td align="center">位地址</td>
+<td align="center">8FH</td>
+<td align="center">8EH</td>
+<td align="center">8DH</td>
+<td align="center">8CH</td>
+<td align="center">8BH</td>
+<td align="center">8AH</td>
+<td align="center">89H</td>
+<td align="center">88H</td>
+</tr>
+</tbody></table>
+<p><strong>TF1</strong> 定时器 1 溢出标志位。当定时器 1 计满溢出时，由硬件使 TF1 置 1,并且申请中断。进入中断服务程序后，由硬件自动清 0.<br><code>注意，如果使用定时器的中断，那么该位完全不用人为去操作;如果使用软件查询方式的话，当查询到该位置 1 后，就需要用软件清 0.</code><br><strong>TR1</strong> 定时器 1 运行控制位。由软件清 0 关闭定时器 1.当 GATE=I 且 INT1 为高电平时， TR1 置 1,启动定时器 1;当 GATE=0 时， TRI 置 1, 启动定时器 1.<br><strong>TF0</strong> 定时器 0 溢出标志，其功能及操作方法同 <strong>TF1</strong>.<br><strong>TR0</strong> 定时器 0 运行控制位，其功能及操作方法同 <strong>TR1</strong>.<br><strong>IE1</strong> 外部中断 1 请求标志.</p>
+<p>要让数码管显示时间要使用寄存器 <strong>TMOD</strong> 定时器 0，工作方式 1；</p>
+<h3 id="例程"><a href="#例程" class="headerlink" title="例程"></a>例程</h3><figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br><span class="line">119</span><br><span class="line">120</span><br><span class="line">121</span><br><span class="line">122</span><br><span class="line">123</span><br><span class="line">124</span><br><span class="line">125</span><br><span class="line">126</span><br><span class="line">127</span><br><span class="line">128</span><br><span class="line">129</span><br><span class="line">130</span><br><span class="line">131</span><br><span class="line">132</span><br><span class="line">133</span><br></pre></td><td class="code"><pre><code class="hljs C"><span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;STC8A8K64S4A12.h&gt;</span></span><br><br><span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;intrins.h&gt;</span></span><br><br><span class="hljs-meta">#<span class="hljs-keyword">define</span> SEG P1</span><br><br><span class="hljs-meta">#<span class="hljs-keyword">define</span> BIT P0</span><br><br><span class="hljs-comment">//宏定义</span><br><span class="hljs-type">unsigned</span> <span class="hljs-type">char</span> code SEG1[<span class="hljs-number">16</span>]=&#123;<span class="hljs-number">0xc0</span>,<span class="hljs-number">0xf9</span>,<span class="hljs-number">0xa4</span>,<span class="hljs-number">0xb0</span>,<span class="hljs-number">0x99</span>,<span class="hljs-number">0x92</span>,<span class="hljs-number">0x82</span>,<span class="hljs-number">0xf8</span>,<span class="hljs-number">0x80</span>,<span class="hljs-number">0x90</span>,<span class="hljs-number">0x88</span>,<span class="hljs-number">0x83</span>,<span class="hljs-number">0xc6</span>,<span class="hljs-number">0xa1</span>,<span class="hljs-number">0x86</span>,<span class="hljs-number">0x8e</span>&#125;;<span class="hljs-comment">//段选码，无小数点（0~f）</span><br><span class="hljs-type">unsigned</span> <span class="hljs-type">char</span> code SEG2[<span class="hljs-number">16</span>]=&#123;<span class="hljs-number">0x40</span>,<span class="hljs-number">0x79</span>,<span class="hljs-number">0x24</span>,<span class="hljs-number">0x30</span>,<span class="hljs-number">0x19</span>,<span class="hljs-number">0x12</span>,<span class="hljs-number">0x02</span>,<span class="hljs-number">0x78</span>,<span class="hljs-number">0x00</span>,<span class="hljs-number">0x10</span>,<span class="hljs-number">0x08</span>,<span class="hljs-number">0x03</span>,<span class="hljs-number">0x46</span>,<span class="hljs-number">0x21</span>,<span class="hljs-number">0x06</span>,<span class="hljs-number">0x0e</span>&#125;;<span class="hljs-comment">//段选码，有小数点（0~f）</span><br><span class="hljs-type">unsigned</span> <span class="hljs-type">char</span> code Bit[<span class="hljs-number">4</span>]=&#123;<span class="hljs-number">0xFE</span>,<span class="hljs-number">0xFD</span>,<span class="hljs-number">0xFB</span>,<span class="hljs-number">0xF7</span>&#125;;<span class="hljs-comment">//位选码，（1~4）</span><br><span class="hljs-type">unsigned</span> <span class="hljs-type">int</span> i=<span class="hljs-number">0</span>;<span class="hljs-comment">//计数</span><br><span class="hljs-type">unsigned</span> <span class="hljs-type">char</span> mm=<span class="hljs-number">0</span>,ss=<span class="hljs-number">0</span>;<span class="hljs-comment">//分秒</span><br><br><span class="hljs-type">void</span> <span class="hljs-title function_">delay</span><span class="hljs-params">(<span class="hljs-type">unsigned</span> <span class="hljs-type">int</span> x)</span><span class="hljs-comment">//延时函数</span><br>&#123;<br>	<span class="hljs-keyword">while</span>(x--);<br>&#125;<br><br><span class="hljs-comment">// 按下按键分钟归零</span><br><br><br><span class="hljs-type">void</span> <span class="hljs-title function_">display</span><span class="hljs-params">()</span><span class="hljs-comment">//显示函数</span><br>&#123;<br>	<span class="hljs-keyword">if</span>(ss%<span class="hljs-number">2</span>==<span class="hljs-number">0</span>)<span class="hljs-comment">//偶数秒显示冒号</span><br>  &#123;<br>    <span class="hljs-comment">//秒数个位</span><br>    SEG= <span class="hljs-number">0xFF</span>;<br>    delay(<span class="hljs-number">1</span>);<br>    BIT = Bit[<span class="hljs-number">3</span>];<br>    SEG = SEG1[ss%<span class="hljs-number">10</span>];<br>    delay(<span class="hljs-number">1</span>);<br>    <span class="hljs-comment">//秒数十位</span><br>    SEG= <span class="hljs-number">0xFF</span>;<br>    delay(<span class="hljs-number">1</span>);<br>    BIT = Bit[<span class="hljs-number">2</span>];<br>    SEG = SEG1[ss/<span class="hljs-number">10</span>];<br>    delay(<span class="hljs-number">1</span>);<br>    <span class="hljs-comment">//分钟数个位</span><br>    SEG= <span class="hljs-number">0xFF</span>;<br>    delay(<span class="hljs-number">1</span>);<br>    BIT = Bit[<span class="hljs-number">1</span>];<br>    SEG = SEG2[mm%<span class="hljs-number">10</span>];<br>    delay(<span class="hljs-number">1</span>);<br>    <span class="hljs-comment">//分钟数十位</span><br>    SEG= <span class="hljs-number">0xFF</span>;<br>    delay(<span class="hljs-number">1</span>);<br>    BIT = Bit[<span class="hljs-number">0</span>];<br>    SEG = SEG2[mm/<span class="hljs-number">10</span>];<br>    delay(<span class="hljs-number">1</span>);<br>  &#125;<br>  <span class="hljs-keyword">else</span><span class="hljs-comment">//奇数秒不显示冒号</span><br>  &#123;<br>    <span class="hljs-comment">//秒数个位</span><br>    SEG= <span class="hljs-number">0xFF</span>;<br>    delay(<span class="hljs-number">1</span>);<br>    BIT = Bit[<span class="hljs-number">3</span>];<br>    SEG = SEG1[ss%<span class="hljs-number">10</span>];<br>    delay(<span class="hljs-number">1</span>);<br>    <span class="hljs-comment">//秒数十位</span><br>    SEG= <span class="hljs-number">0xFF</span>;<br>    delay(<span class="hljs-number">1</span>);<br>    BIT = Bit[<span class="hljs-number">2</span>];<br>    SEG = SEG1[ss/<span class="hljs-number">10</span>];<br>    delay(<span class="hljs-number">1</span>);<br>    <span class="hljs-comment">//分钟数个位</span><br>    SEG= <span class="hljs-number">0xFF</span>;<br>    delay(<span class="hljs-number">1</span>);<br>    BIT = Bit[<span class="hljs-number">1</span>];<br>    SEG = SEG1[mm%<span class="hljs-number">10</span>];<br>    delay(<span class="hljs-number">1</span>);<br>    <span class="hljs-comment">//分钟数十位</span><br>    SEG= <span class="hljs-number">0xFF</span>;<br>    delay(<span class="hljs-number">1</span>);<br>    BIT = Bit[<span class="hljs-number">0</span>];<br>    SEG = SEG1[mm/<span class="hljs-number">10</span>];<br>    delay(<span class="hljs-number">1</span>);<br>  &#125;<br>&#125;<br><br><span class="hljs-type">void</span> <span class="hljs-title function_">T0_init</span><span class="hljs-params">()</span><span class="hljs-comment">//初始化计数函数 @12MHZ 50ms</span><br>&#123;<br>    TMOD = <span class="hljs-number">0x01</span>;<span class="hljs-comment">//计数器1模式</span><br>    TH0 = (<span class="hljs-number">65536</span><span class="hljs-number">-50000</span>)/<span class="hljs-number">256</span>; <span class="hljs-comment">//高位定义</span><br>    TL0 = (<span class="hljs-number">65536</span><span class="hljs-number">-50000</span>)%<span class="hljs-number">256</span>; <span class="hljs-comment">//低位定义</span><br>    EA = <span class="hljs-number">1</span>;<span class="hljs-comment">//开总中断</span><br>    ET0 = <span class="hljs-number">1</span>;<span class="hljs-comment">//开T0中断</span><br>    TR0 = <span class="hljs-number">1</span>;<span class="hljs-comment">//启动T0</span><br>&#125;<br><br><span class="hljs-type">void</span> <span class="hljs-title function_">button</span><span class="hljs-params">()</span><br>&#123;<br>  <span class="hljs-keyword">if</span>(P3^<span class="hljs-number">0</span>==<span class="hljs-number">0</span>)<br>  &#123;mm++;&#125;<br>  <span class="hljs-keyword">if</span>(P3^<span class="hljs-number">1</span>==<span class="hljs-number">0</span>)<br>  &#123;mm--;&#125;<br>  <span class="hljs-keyword">if</span>(P3^<span class="hljs-number">2</span>==<span class="hljs-number">0</span>)<br>  &#123;mm=<span class="hljs-number">0</span>;&#125;<br>  <span class="hljs-keyword">if</span>(P3^<span class="hljs-number">3</span>==<span class="hljs-number">0</span>)<br>  &#123;ss=<span class="hljs-number">0</span>;&#125;<br>&#125;<br><br><span class="hljs-type">void</span> <span class="hljs-title function_">main</span><span class="hljs-params">()</span><span class="hljs-comment">//主函数</span><br>&#123;<br>   T0_init();<span class="hljs-comment">//初始化计时</span><br>    <span class="hljs-keyword">while</span>(<span class="hljs-number">1</span>)<br>    &#123;<br>      display();<span class="hljs-comment">//调用显示函数</span><br>    &#125;<br><br>&#125;<br><br><span class="hljs-type">void</span> <span class="hljs-title function_">timer0_int</span><span class="hljs-params">()</span> interrupt 1<span class="hljs-comment">//中断函数</span><br>&#123;<br>  TH0 = (<span class="hljs-number">65536</span><span class="hljs-number">-50000</span>)/<span class="hljs-number">256</span>;<span class="hljs-comment">//回初值</span><br>  TL0 = (<span class="hljs-number">65536</span><span class="hljs-number">-50000</span>)%<span class="hljs-number">256</span>;<br>  i++;<span class="hljs-comment">//计数</span><br>  <span class="hljs-keyword">if</span>(i == <span class="hljs-number">20</span>)<span class="hljs-comment">//20次为一秒</span><br>  &#123;<br>    i = <span class="hljs-number">0</span>;<br>    ss++;<span class="hljs-comment">//秒数加一</span><br>     <span class="hljs-keyword">if</span>(ss == <span class="hljs-number">60</span>)<span class="hljs-comment">//秒数满六十</span><br>     &#123;<br>      ss = <span class="hljs-number">0</span>;<span class="hljs-comment">//秒数归零</span><br>      mm++;<span class="hljs-comment">//分钟数加一</span><br>      <span class="hljs-keyword">if</span>(mm == <span class="hljs-number">60</span>)<span class="hljs-comment">//分钟数满六十</span><br>      &#123;<br>        mm = <span class="hljs-number">0</span>;<span class="hljs-comment">//分钟数归零</span><br>      &#125;<br>     &#125;<br>    &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+                
+              </div>
+            
+            <hr/>
+            <div>
+              <div class="post-metas my-3">
+  
+    <div class="post-meta mr-3 d-flex align-items-center">
+      <i class="iconfont icon-category"></i>
+      
+
+<span class="category-chains">
+  
+  
+    
+      <span class="category-chain">
+        
+  <a href="/categories/SAO-Knight/" class="category-chain-item">SAO_Knight</a>
+  
+  
+
+      </span>
+    
+  
+</span>
+
+    </div>
+  
+  
+    <div class="post-meta">
+      <i class="iconfont icon-tags"></i>
+      
+        <a href="/tags/51%E5%8D%95%E7%89%87%E6%9C%BA/">#51单片机</a>
+      
+    </div>
+  
+</div>
+
+
+              
+  
+
+  <div class="license-box my-3">
+    <div class="license-title">
+      <div>基于51单片机数码管的时钟显示</div>
+      <div>http://kirito.top/2022/04/06/shizhong/</div>
+    </div>
+    <div class="license-meta">
+      
+        <div class="license-meta-item">
+          <div>作者</div>
+          <div>SAO_Knight</div>
+        </div>
+      
+      
+        <div class="license-meta-item license-meta-date">
+          <div>发布于</div>
+          <div>2022年4月6日</div>
+        </div>
+      
+      
+      <div class="license-meta-item">
+        <div>许可协议</div>
+        <div>
+          
+            
+            
+              <a target="_blank" href="https://creativecommons.org/licenses/by/4.0/">
+              <span class="hint--top hint--rounded" aria-label="BY - 署名">
+                <i class="iconfont icon-by"></i>
+              </span>
+              </a>
+            
+          
+        </div>
+      </div>
+    </div>
+    <div class="license-icon iconfont"></div>
+  </div>
+
+
+
+              
+                <div class="post-prevnext my-3">
+                  <article class="post-prev col-6">
+                    
+                    
+                      <a href="/2022/05/19/pwmdj/" title="PWM信号的产生与电机的驱动">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">PWM信号的产生与电机的驱动</span>
+                        <span class="visible-mobile">上一篇</span>
+                      </a>
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/2021/12/25/git-1/" title="关于使用Hexo搭建个人博客的简易教程">
+                        <span class="hidden-mobile">关于使用Hexo搭建个人博客的简易教程</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+  <article id="comments" lazyload>
+    
+  <div id="valine"></div>
+  <script type="text/javascript">
+    Fluid.utils.loadComments('#valine', function() {
+      Fluid.utils.createScript('https://cdn.jsdelivr.net/npm/valine@1/dist/Valine.min.js', function() {
+        var options = Object.assign(
+          {"appId":"GuETE72RPvqN5uwHdIbycKLr-gzGzoHsz","appKey":"v91uRJExaGc3ALDNzyCpldju","path":"window.location.pathname","placeholder":"来写点东西吧,记得在上方填写昵称","avatar":"retro","meta":["nick","mail","link"],"requiredFields":[],"pageSize":10,"lang":"zh-CN","highlight":false,"recordIP":false,"serverURLs":"","emojiCDN":null,"emojiMaps":null,"enableQQ":true},
+          {
+            el: "#valine",
+            path: window.location.pathname
+          }
+        )
+        new Valine(options);
+        Fluid.utils.waitElementVisible('#valine .vcontent', () => {
+          var imgSelector = '#valine .vcontent img:not(.vemoji)';
+          Fluid.plugins.imageCaption(imgSelector);
+          Fluid.plugins.fancyBox(imgSelector);
+        })
+      });
+    });
+  </script>
+  <noscript>Please enable JavaScript to view the comments</noscript>
+
+
+  </article>
+
+
+          </article>
+        </div>
+      </div>
+    </div>
+
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+  <aside class="sidebar" style="margin-left: -1rem">
+    <div id="toc">
+  <p class="toc-header"><i class="iconfont icon-list"></i>&nbsp;目录</p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+
+
+  </aside>
+
+
+    </div>
+  </div>
+</div>
+
+
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+
+
+
+
+    
+
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v" for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+    
+
+    
+      <div class="col-lg-7 mx-auto nopadding-x-md">
+        <div class="container custom mx-auto">
+          <link rel="stylesheet" href="/dist/APlayer.min.css"> <div id="aplayer"></div> <script type="text/javascript" src="/dist/APlayer.min.js"></script> <script type="text/javascript" src="/js/music.js"></script> 
+        </div>
+      </div>
+    
+
+  </main>
+  <!--<div id="aplayerContent">
+  <link rel="stylesheet" href="/dist/APlayer.min.css">
+  <div id="aplayer"></div>
+  <script type="text/javascript" src="/dist/APlayer.min.js"></script>
+  <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/meting@2.0.1/dist/Meting.min.js"></script>
+  <meting-js server="netease" type="playlist" id="5347406379" fixed="true" autoplay="true" loop="all" order="random" lrc-type="false"></meting-js>'
+  </div>-->
+
+  <footer>
+    <div class="footer-inner">
+  
+    <div class="footer-content">
+       <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> 
+    </div>
+  
+  
+    <div class="statistics">
+  
+  
+
+  
+    
+      <span id="busuanzi_container_site_pv" style="display: none">
+        总访问量 
+        <span id="busuanzi_value_site_pv"></span>
+         次
+      </span>
+    
+    
+      <span id="busuanzi_container_site_uv" style="display: none">
+        总访客数 
+        <span id="busuanzi_value_site_uv"></span>
+         人
+      </span>
+    
+    
+  
+</div>
+
+  
+  
+  
+</div>
+
+  </footer>
+
+  <!-- Scripts -->
+  
+  <script  src="https://cdn.jsdelivr.net/npm/nprogress@0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/nprogress@0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://cdn.jsdelivr.net/npm/jquery@3/dist/jquery.min.js" ></script>
+<script  src="https://cdn.jsdelivr.net/npm/bootstrap@4/dist/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+
+  <script  src="https://cdn.jsdelivr.net/npm/typed.js@2/lib/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var subtitle = document.getElementById('subtitle');
+      if (!subtitle || !typing) {
+        return;
+      }
+      var text = subtitle.getAttribute('data-typed-text');
+      
+        typing(text);
+      
+    })(window, document);
+  </script>
+
+
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+
+  
+<script>
+  Fluid.utils.createScript('https://cdn.jsdelivr.net/npm/tocbot@4/dist/tocbot.min.js', function() {
+    var toc = jQuery('#toc');
+    if (toc.length === 0 || !window.tocbot) { return; }
+    var boardCtn = jQuery('#board-ctn');
+    var boardTop = boardCtn.offset().top;
+
+    window.tocbot.init({
+      tocSelector     : '#toc-body',
+      contentSelector : '.markdown-body',
+      headingSelector : CONFIG.toc.headingSelector || 'h1,h2,h3,h4,h5,h6',
+      linkClass       : 'tocbot-link',
+      activeLinkClass : 'tocbot-active-link',
+      listClass       : 'tocbot-list',
+      isCollapsedClass: 'tocbot-is-collapsed',
+      collapsibleClass: 'tocbot-is-collapsible',
+      collapseDepth   : CONFIG.toc.collapseDepth || 0,
+      scrollSmooth    : true,
+      headingsOffset  : -boardTop
+    });
+    if (toc.find('.toc-list-item').length > 0) {
+      toc.css('visibility', 'visible');
+    }
+  });
+</script>
+
+
+  <script src=https://cdn.jsdelivr.net/npm/clipboard@2/dist/clipboard.min.js></script>
+
+  <script>Fluid.plugins.codeWidget();</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://cdn.jsdelivr.net/npm/anchor-js@4/anchor.min.js', function() {
+    window.anchors.options = {
+      placement: CONFIG.anchorjs.placement,
+      visible  : CONFIG.anchorjs.visible
+    };
+    if (CONFIG.anchorjs.icon) {
+      window.anchors.options.icon = CONFIG.anchorjs.icon;
+    }
+    var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+    var res = [];
+    for (var item of el) {
+      res.push('.markdown-body > ' + item.trim());
+    }
+    if (CONFIG.anchorjs.placement === 'left') {
+      window.anchors.options.class = 'anchorjs-link-left';
+    }
+    window.anchors.add(res.join(', '));
+  });
+</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3/dist/jquery.fancybox.min.js', function() {
+    Fluid.plugins.fancyBox();
+  });
+</script>
+
+
+  <script>Fluid.plugins.imageCaption();</script>
+
+  <script  src="/js/local-search.js" ></script>
+
+  <script defer src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js" ></script>
+
+
+
+
+  
+<script src="//cdn.jsdelivr.net/npm/aplayer/dist/APlayer.min.js"></script>
+<script src="//cdn.jsdelivr.net/gh/metowolf/MetingJS@1.2/dist/Meting.min.js"></script>
+<script src="/js/live2d.js"></script>
+<script src="/js/music.js"></script>
+<script src="//cdn.jsdelivr.net/gh/bynotes/texiao/source/js/love.js"></script>
+<script src="//cdn.jsdelivr.net/gh/bynotes/texiao/source/js/dianjichuzi.js"></script>
+<script src="///cdn.jsdelivr.net/gh/bynotes/texiao/source/js/xiaoxuehua.js"></script>
+<script src="//cdn.jsdelivr.net/gh/bynotes/texiao/source/js/caidai.js"></script>
+
+
+
+<!-- 主题的启动项，将它保持在最底部 -->
+<!-- the boot of the theme, keep it at the bottom -->
+<script  src="/js/boot.js" ></script>
+
+
+  
+
+  <noscript>
+    <div class="noscript-warning">博客在允许 JavaScript 运行的环境下浏览效果更佳</div>
+  </noscript>
+</body>
+</html>
