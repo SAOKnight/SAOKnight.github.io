@@ -14,7 +14,7 @@ Live.onload = function () {
             "vOffset": -30
         },
         "mobile": {
-            "show": false,
+            "show": true,
             "scale": 0.5
         },
         "react": {
